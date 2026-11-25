@@ -7,25 +7,93 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Project {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  description String   @db.Text
-  imageUrl    String?
-  repoUrl     String?
-  demoUrl     String?
-  tags        String[] @default([])
-  featured    Boolean  @default(false)
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  FREELANCE
+  INTERNSHIP
 }
 
 model ContactMessage {
   id        String   @id @default(cuid())
+
   name      String
   email     String
+  subject   String?
   message   String   @db.Text
+
+  isRead    Boolean  @default(false)
+  isReplied Boolean  @default(false)
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+
+
+model Project {
+  id           String   @id @default(cuid())
+
+  title        String
+  slug         String   @unique
+  subtitle     String?
+  description  String   @db.Text
+
+  category     String?
+  role         String?
+  year         Int?
+
+  imageUrl     String?
+  repoUrl      String?
+  demoUrl      String?
+
+  tags         String[] @default([])
+  technologies String[] @default([])
+
+  // Relation with Experience
+  experiences  Experience[]
+
+  featured     Boolean  @default(false)
+  published    Boolean  @default(true)
+  sortOrder    Int      @default(0)
+
+  startedAt    DateTime?
+  completedAt  DateTime?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+
+
+model Experience {
+  id             String   @id @default(cuid())
+
+  company        String
+  position       String
+  description    String   @db.Text
+
+  location       String?
+  employmentType EmploymentType?
+
+  startDate      DateTime
+  endDate        DateTime?
+  current        Boolean  @default(false)
+
+  // Relation with Project
+  projects       Project[]
+
+  technologies   String[] @default([])
+
+  featured       Boolean  @default(false)
+  published      Boolean  @default(true)
+  sortOrder      Int      @default(0)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
