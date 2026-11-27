@@ -6,10 +6,20 @@ import {
 } from "@nestjs/common";
 
 import { Prisma } from "@prisma/client";
+import { assertSkillsExist } from "../../common/assert-skills-exist.js";
 import { PrismaService } from "../../prisma/prisma.service.js";
 import { ProjectListDto } from "./dto/projects.dto.js";
 import { CreateProjectDto } from "./dto/create.dto.js";
 import { UpdateProjectDto } from "./dto/update.js";
+
+const skillInclude = {
+  where: { published: true },
+  orderBy: [
+    { category: "asc" as const },
+    { sortOrder: "asc" as const },
+    { name: "asc" as const },
+  ],
+};
 
 @Injectable()
 export class ProjectsService {
@@ -53,6 +63,14 @@ export class ProjectsService {
       ];
     }
 
+    if (query.skillId) {
+      where.skills = { some: { id: query.skillId } };
+    }
+
+    if (query.skillSlug) {
+      where.skills = { some: { slug: query.skillSlug } };
+    }
+
     // Fetch projects and total count
     const [projects, total] = await Promise.all([
       this.prisma.project.findMany({
@@ -67,6 +85,13 @@ export class ProjectsService {
         ],
         skip,
         take: limit,
+        include: {
+          skills: skillInclude,
+          experiences: {
+            where: { published: true },
+            orderBy: [{ sortOrder: "asc" }, { startDate: "desc" }],
+          },
+        },
       }),
 
       this.prisma.project.count({
@@ -88,12 +113,17 @@ export class ProjectsService {
   }
 
     async createProject(data: CreateProjectDto) {
-      const slug = data.slug
+      const { skillIds, ...projectData } = data;
+
+      if (skillIds !== undefined && skillIds.length > 0) {
+        await assertSkillsExist(this.prisma, skillIds);
+      }
+
+      const slug = projectData.slug
         .trim()
         .toLowerCase()
         .replace(/\s+/g, "-");
   
-      // Check existing slug
       const existingProject = await this.prisma.project.findUnique({
         where: { slug },
       });
@@ -106,45 +136,29 @@ export class ProjectsService {
   
       return this.prisma.project.create({
         data: {
-          title: data.title.trim(),
+          title: projectData.title.trim(),
           slug,
-          subtitle: data.subtitle,
-          description: data.description,
-          category: data.category,
-          role: data.role,
-          year: data.year,
-          imageUrl: data.imageUrl,
-          repoUrl: data.repoUrl,
-          demoUrl: data.demoUrl,
-  
-          tags: data.tags ?? [],
-          technologies: data.technologies ?? [],
-  
-          featured: data.featured ?? false,
+          subtitle: projectData.subtitle,
+          description: projectData.description,
+          category: projectData.category,
+          role: projectData.role,
+          year: projectData.year,
+          imageUrl: projectData.imageUrl,
+          repoUrl: projectData.repoUrl,
+          demoUrl: projectData.demoUrl,
+          tags: projectData.tags ?? [],
+          technologies: projectData.technologies ?? [],
+          featured: projectData.featured ?? false,
           published: true,
-          sortOrder: data.sortOrder ?? 0,
+          sortOrder: projectData.sortOrder ?? 0,
+          ...(skillIds?.length && {
+            skills: {
+              connect: skillIds.map((id) => ({ id })),
+            },
+          }),
         },
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          subtitle: true,
-          description: true,
-          category: true,
-          role: true,
-          year: true,
-          imageUrl: true,
-          repoUrl: true,
-          demoUrl: true,
-          tags: true,
-          technologies: true,
-          featured: true,
-          published: true,
-          sortOrder: true,
-          startedAt: true,
-          completedAt: true,
-          createdAt: true,
-          updatedAt: true,
+        include: {
+          skills: skillInclude,
         },
       });
     }
@@ -169,11 +183,25 @@ export class ProjectsService {
         throw new ConflictException("Project with this slug already exists");
       }
      }
+     const { skillIds, ...projectData } = data;
+
+     if (skillIds !== undefined && skillIds.length > 0) {
+       await assertSkillsExist(this.prisma, skillIds);
+     }
+
      return this.prisma.project.update({
       where: { id },
       data: {
-        ...data,
+        ...projectData,
         slug,
+        ...(skillIds !== undefined && {
+          skills: {
+            set: skillIds.map((skillId) => ({ id: skillId })),
+          },
+        }),
+      },
+      include: {
+        skills: skillInclude,
       },
      });
   }
@@ -193,6 +221,13 @@ export class ProjectsService {
   async projectDetail(id: string){
     const project = await this.prisma.project.findUnique({
       where: { id },
+      include: {
+        skills: skillInclude,
+        experiences: {
+          where: { published: true },
+          orderBy: [{ sortOrder: "asc" }, { startDate: "desc" }],
+        },
+      },
     });
     if(!project){
       throw new NotFoundException("Project not found");

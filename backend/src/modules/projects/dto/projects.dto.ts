@@ -47,6 +47,14 @@ export class ProjectListDto {
   search?: string;
 
   @IsOptional()
+  @IsString()
+  skillId?: string;
+
+  @IsOptional()
+  @IsString()
+  skillSlug?: string;
+
+  @IsOptional()
   @IsIn(["asc", "desc"])
   sortOrder: "asc" | "desc" = "desc";
 }

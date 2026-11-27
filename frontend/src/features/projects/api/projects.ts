@@ -1,67 +1,59 @@
-
 import { api } from "@/lib/api";
-import { ProjectListSchema } from "../schema/pagination.schema";
-import { ProjectSchema } from "../schema/project_schema";
+import {
+  type ProjectListQuery,
+  type ProjectListResponse,
+} from "../schema/pagination.schema";
+import {
+  type CreateProjectInput,
+  type Project,
+  type UpdateProjectInput,
+} from "../schema/project_schema";
 
+export async function getProjects(query: ProjectListQuery = {}) {
+  const params = new URLSearchParams();
 
-export async function getProjects(query: ProjectListSchema) {
-    try {
-        const params = new URLSearchParams();
-        params.set("page", query.meta.page.toString());
-        params.set("limit", query.meta.limit.toString());
-        const response = api<ProjectListSchema>(`/projects?${params.toString()}`);
-        return response;
-    } catch (error) {
-        console.error(error);
-        throw new Error("Failed to get projects");
-    }
+  params.set("page", String(query.page ?? 1));
+  params.set("limit", String(query.limit ?? 10));
+
+  if (query.featured !== undefined) {
+    params.set("featured", String(query.featured));
+  }
+  if (query.search) {
+    params.set("search", query.search);
+  }
+  if (query.sortOrder) {
+    params.set("sortOrder", query.sortOrder);
+  }
+  if (query.skillId) {
+    params.set("skillId", query.skillId);
+  }
+  if (query.skillSlug) {
+    params.set("skillSlug", query.skillSlug);
+  }
+
+  return api<ProjectListResponse>(`/projects?${params.toString()}`);
 }
 
 export async function getProjectDetail(id: string) {
-try {
-    const response = api<ProjectSchema>(`/projects/${id}`);
-    return response;
-} catch (error) {
-    console.error(error);
-    throw new Error("Failed to get project detail");
-}
+  return api<Project>(`/projects/${id}`);
 }
 
-export async function createProject(data: ProjectSchema) {
-    try {
-        const response = api<ProjectSchema>("/projects", {
-            method: "PUT",
-            body: JSON.stringify(data),
-        });
-        return response;
-    } catch (error) {
-        console.error(error);
-        throw new Error("Failed to create project");
-    }
+export async function createProject(data: CreateProjectInput) {
+  return api<Project>("/projects", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }
 
-export async function updateProject(id: string, data: ProjectSchema) {
-    try {
-        const response = api<ProjectSchema>(`/projects/${id}`, {
-            method: "PATCH",
-            body: JSON.stringify(data),
-        });
-        return response;
-    } catch (error) {
-        console.error(error);
-        throw new Error("Failed to update project");
-    }
+export async function updateProject(id: string, data: UpdateProjectInput) {
+  return api<Project>(`/projects/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
 }
-
 
 export async function deleteProject(id: string) {
-    try {
-        const response = api<ProjectSchema>(`/projects/${id}`, {
-            method: "DELETE",
-        });
-        return response;
-    } catch (error) {
-        console.error(error);
-        throw new Error("Failed to delete project");
-    }
+  return api<Project>(`/projects/${id}`, {
+    method: "DELETE",
+  });
 }

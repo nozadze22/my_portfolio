@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { FadeIn } from "@/components/motion/fade-in";
+import { FadeIn } from "@/features/components/motion/fade-in";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,

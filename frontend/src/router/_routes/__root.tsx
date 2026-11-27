@@ -1,7 +1,7 @@
-import { createRootRoute } from "@tanstack/react-router";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 
-import { AnimatedOutlet } from "@/components/motion/animated-outlet";
-import { MotionNavLink } from "@/components/motion/nav-link";
+import { PortfolioFooter } from "@/features/portfolio/layout/portfolio-footer";
+import { PortfolioHeader } from "@/features/portfolio/layout/portfolio-header";
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -9,16 +9,12 @@ export const Route = createRootRoute({
 
 function RootLayout() {
   return (
-    <div className="flex min-h-full flex-col bg-zinc-50 font-sans text-zinc-900 dark:bg-black dark:text-zinc-50">
-      <header className="border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-black/80">
-        <nav className="mx-auto flex max-w-3xl items-center gap-8 px-6 py-4 text-sm font-medium">
-          <MotionNavLink to="/">Home</MotionNavLink>
-          <MotionNavLink to="/about">About</MotionNavLink>
-        </nav>
-      </header>
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
-        <AnimatedOutlet />
+    <div className="portfolio-app flex min-h-full flex-col bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+      <PortfolioHeader />
+      <main className="min-h-screen w-full bg-surface pt-20">
+        <Outlet />
       </main>
+      <PortfolioFooter />
     </div>
   );
 }

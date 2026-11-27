@@ -1,0 +1,13 @@
+{
+  "name": "my_portfolio",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -n backend,frontend -c blue,green \"pnpm --dir backend start:dev\" \"pnpm --dir frontend dev\"",
+    "dev:frontend": "pnpm --dir frontend dev",
+    "dev:backend": "pnpm --dir backend start:dev"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.7"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

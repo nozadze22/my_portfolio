@@ -70,6 +70,11 @@ export class CreateProjectDto {
   technologies?: string[];
 
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  skillIds?: string[];
+
+  @IsOptional()
   @IsBoolean()
   featured?: boolean;
 
