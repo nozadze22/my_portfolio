@@ -53,6 +53,11 @@ import {
     @IsArray()
     @IsString({ each: true })
     technologies?: string[];
+
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    skillIds?: string[];
   
     @IsOptional()
     @IsBoolean()

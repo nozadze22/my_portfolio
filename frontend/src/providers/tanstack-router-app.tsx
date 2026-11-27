@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 
 import { router } from "@/router/router";
+import { QueryProvider } from "@/providers/query-provider";
 
 const RouterProvider = dynamic(
   () =>
@@ -11,5 +12,9 @@ const RouterProvider = dynamic(
 );
 
 export function TanStackRouterApp() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryProvider>
+      <RouterProvider router={router} />
+    </QueryProvider>
+  );
 }

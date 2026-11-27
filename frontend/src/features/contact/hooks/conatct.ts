@@ -1,35 +1,25 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getContactList, sendContact } from "../api/contact";
 import { toast } from "sonner";
-import { ContactSchema } from "../schema/conatct.schema";
-
+import type { SendContactInput } from "../schema/conatct.schema";
+import type { ContactListQuery } from "../api/contact";
 
 export function useSendContact() {
-    return useMutation({
-       mutationKey: ["sendContact"],
-       mutationFn: async (data: ContactSchema) => {
-        const responce = await sendContact(data);
-        return responce;
-       },
-       onSuccess: () => {
-        toast.success("Contact sent successfully");
-       },
-       onError: () => {
-        toast.error("Failed to send contact");
-       },
-    })
+  return useMutation({
+    mutationKey: ["sendContact"],
+    mutationFn: (data: SendContactInput) => sendContact(data),
+    onSuccess: () => {
+      toast.success("Contact sent successfully");
+    },
+    onError: () => {
+      toast.error("Failed to send contact");
+    },
+  });
 }
 
-
-export function useGetContactList() {
-    return useQuery({
-        queryKey: ["contactList"],
-        queryFn: async () => {
-            const responce = await getContactList({ page: 1, limit: 10, total: 0 });
-            return responce;
-        },
-    })
+export function useGetContactList(query: ContactListQuery = {}) {
+  return useQuery({
+    queryKey: ["contactList", query],
+    queryFn: () => getContactList(query),
+  });
 }
-
-
-

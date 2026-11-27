@@ -48,15 +48,20 @@ export class CreateProjectDto {
   year?: number;
 
   @IsOptional()
-  @IsUrl()
+  @IsUrl({ require_tld: false })
   imageUrl?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsArray()
+  @IsString({ each: true })
+  galleryUrls?: string[];
+
+  @IsOptional()
+  @IsUrl({ require_tld: false })
   repoUrl?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsUrl({ require_tld: false })
   demoUrl?: string;
 
   @IsOptional()
@@ -68,6 +73,11 @@ export class CreateProjectDto {
   @IsArray()
   @IsString({ each: true })
   technologies?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  skillIds?: string[];
 
   @IsOptional()
   @IsBoolean()

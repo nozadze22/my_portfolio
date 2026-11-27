@@ -1,0 +1,1 @@
+export { SectionShell, type SectionShellProps } from "@/components/layout/section-shell";

@@ -1,55 +1,37 @@
-
-import { ContactSchema } from "../schema/conatct.schema";
+import {
+  type ContactMessage,
+  type SendContactInput,
+} from "../schema/conatct.schema";
 import { api } from "@/lib/api";
 
-export type paginationParams = {
+export type ContactListQuery = {
+  page?: number;
+  limit?: number;
+};
+
+export type ContactListResponse = {
+  data: ContactMessage[];
+  meta: {
     total: number;
     page: number;
     limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+};
+
+export async function sendContact(data: SendContactInput) {
+  return api<ContactMessage>("/contact/send", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }
 
-export type contactListResponse = {
-    data: ContactSchema[];
-    total: number;
-    page: number;
-    limit: number;
-}
+export async function getContactList(query: ContactListQuery = {}) {
+  const params = new URLSearchParams();
+  params.set("page", String(query.page ?? 1));
+  params.set("limit", String(query.limit ?? 10));
 
-export type sendContactResponse = {
-    message: string;
-    name: string;
-    email: string;
-    phone: string;
-    createdAt: string;
-}
-
-
-export async function sendContact(data: ContactSchema) {
-    const  response = api<sendContactResponse>("/contact/send", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-    return response;
-}
-    
-export async function getContactList(query: paginationParams) {
-    try {
-        const params = new URLSearchParams();
-        params.set("page", query.page.toString());
-        params.set("limit", query.limit.toString());
-        const response = api<contactListResponse[]>("/contact/list", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        return response;
-        
-    } catch (error) {
-        console.error(error);
-        throw new Error("Failed to get contact list");
-    }
+  return api<ContactListResponse>(`/contact/list?${params.toString()}`);
 }

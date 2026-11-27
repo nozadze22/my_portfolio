@@ -9,11 +9,82 @@ datasource db {
 
 
 enum EmploymentType {
+  REMOTE
   FULL_TIME
   PART_TIME
+  OTHER
   CONTRACT
   FREELANCE
   INTERNSHIP
+}
+
+enum SkillCategory {
+  LANGUAGE
+  FRAMEWORK
+  LIBRARY
+  DATABASE
+  TOOL
+  PLATFORM
+  OTHER
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  fullName     String?
+  role         UserRole @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique @map("token_hash")
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+/// Singleton row — personal portfolio owner (not multi-tenant).
+model SiteProfile {
+  id String @id @default("owner")
+
+  fullName     String
+  shortLabel   String?
+  roleTitle    String?
+  heroTitle    String? @db.Text
+  heroSubtitle String? @db.Text
+  aboutBody    String? @db.Text
+  email        String
+  phone        String?
+  location     String?
+  avatarUrl    String?
+  availability String?
+
+  githubUrl   String?
+  linkedinUrl String?
+  twitterUrl  String?
+  websiteUrl  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("site_profile")
 }
 
 model ContactMessage {
@@ -49,13 +120,14 @@ model Project {
   year         Int?
 
   imageUrl     String?
+  galleryUrls  String[] @default([])
   repoUrl      String?
   demoUrl      String?
 
   tags         String[] @default([])
   technologies String[] @default([])
 
-  // Relation with Experience
+  skills       Skill[]
   experiences  Experience[]
 
   featured     Boolean  @default(false)
@@ -85,8 +157,8 @@ model Experience {
   endDate        DateTime?
   current        Boolean  @default(false)
 
-  // Relation with Project
   projects       Project[]
+  skills         Skill[]
 
   technologies   String[] @default([])
 
@@ -96,4 +168,52 @@ model Experience {
 
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+model Skill {
+  id       String        @id @default(cuid())
+  name     String
+  slug     String        @unique
+  category SkillCategory @default(OTHER)
+  iconUrl  String?
+  color    String?
+
+  projects     Project[]
+  experiences  Experience[]
+  educations   Education[]
+
+  published Boolean @default(true)
+  sortOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category, sortOrder])
+  @@index([published])
+  @@map("skills")
+}
+
+model Education {
+  id           String  @id @default(cuid())
+  institution  String
+  degree       String?
+  fieldOfStudy String?
+  description  String? @db.Text
+  location     String?
+
+  startDate DateTime
+  endDate   DateTime?
+  current   Boolean  @default(false)
+
+  skills Skill[]
+
+  featured    Boolean @default(false)
+  published   Boolean @default(true)
+  sortOrder   Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, sortOrder])
+  @@map("educations")
 }

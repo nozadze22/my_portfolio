@@ -1,8 +1,11 @@
 import {
+    BadRequestException,
     Injectable,
     NotFoundException,
   } from "@nestjs/common";
   
+  import { assertSkillsExist } from "../../common/assert-skills-exist.js";
+  import { parseDateOnly } from "../../common/parse-date-only.js";
   import { PrismaService } from "../../prisma/prisma.service.js";
   import { CreateExperienceDto } from "./dto/create_exp.dto.js";
 import { ExperienceListDto } from "./dto/list_exp.dto.js";
@@ -14,9 +17,12 @@ import { UpdateExperienceDto } from "./dto/update_exp.dot.js";
     constructor(private readonly prisma: PrismaService) {}
   
     async createExperience(data: CreateExperienceDto) {
-      const { projectIds, ...experienceData } = data;
+      const { projectIds, skillIds, startDate, endDate, ...experienceData } = data;
+
+      if (skillIds !== undefined && skillIds.length > 0) {
+        await assertSkillsExist(this.prisma, skillIds);
+      }
   
-      // Validate selected projects
       if (projectIds?.length) {
         const projects = await this.prisma.project.findMany({
           where: {
@@ -32,18 +38,31 @@ import { UpdateExperienceDto } from "./dto/update_exp.dot.js";
         }
       }
   
+      const parsedStart = parseDateOnly(startDate);
+      if (!parsedStart) {
+        throw new BadRequestException("Invalid startDate");
+      }
+
       return this.prisma.experience.create({
         data: {
           ...experienceData,
-  
+          startDate: parsedStart,
+          endDate: parseDateOnly(endDate),
+
           ...(projectIds?.length && {
             projects: {
               connect: projectIds.map((id) => ({ id })),
             },
           }),
+          ...(skillIds?.length && {
+            skills: {
+              connect: skillIds.map((id) => ({ id })),
+            },
+          }),
         },
         include: {
           projects: true,
+          skills: true,
         },
       });
     }
@@ -69,6 +88,7 @@ import { UpdateExperienceDto } from "./dto/update_exp.dot.js";
             take: limit,
             include: {
               projects: true,
+              skills: true,
             },
           }),
       
@@ -91,29 +111,72 @@ import { UpdateExperienceDto } from "./dto/update_exp.dot.js";
       }
 
     async updateExperience(id: string, data: UpdateExperienceDto) {
-        const { projectIds, ...experienceData } = data;
+      const existing = await this.prisma.experience.findUnique({
+        where: { id },
+        select: { id: true },
+      });
 
-        if (projectIds?.length) {
-            const projects = await this.prisma.project.findMany({
-                where: { id: { in: projectIds } },
-            });
-        }
+      if (!existing) {
+        throw new NotFoundException("Experience not found");
+      }
 
-        if (projectIds?.length && projectIds.length !== new Set(projectIds).size) {
-            throw new NotFoundException("One or more projects not found");
-        }
+      const { projectIds, skillIds, startDate, endDate, ...experienceData } = data;
 
-        return this.prisma.experience.update({
-            where: { id },
-            data: {
-                ...experienceData,
-            },
+      if (skillIds !== undefined && skillIds.length > 0) {
+        await assertSkillsExist(this.prisma, skillIds);
+      }
+
+      if (projectIds !== undefined && projectIds.length > 0) {
+        const projects = await this.prisma.project.findMany({
+          where: { id: { in: projectIds } },
+          select: { id: true },
         });
+
+        if (projects.length !== new Set(projectIds).size) {
+          throw new NotFoundException("One or more projects not found");
+        }
+      }
+
+      return this.prisma.experience.update({
+        where: { id },
+        data: {
+          ...experienceData,
+          ...(startDate !== undefined && {
+            startDate: parseDateOnly(startDate),
+          }),
+          ...(endDate !== undefined && {
+            endDate: parseDateOnly(endDate),
+          }),
+          ...(projectIds !== undefined && {
+            projects: {
+              set: projectIds.map((projectId) => ({ id: projectId })),
+            },
+          }),
+          ...(skillIds !== undefined && {
+            skills: {
+              set: skillIds.map((skillId) => ({ id: skillId })),
+            },
+          }),
+        },
+        include: {
+          projects: true,
+          skills: true,
+        },
+      });
     }
 
     async deleteExperience(id: string) {
-        return this.prisma.experience.delete({
-            where: { id },
-        });
+      const existing = await this.prisma.experience.findUnique({
+        where: { id },
+        select: { id: true },
+      });
+
+      if (!existing) {
+        throw new NotFoundException("Experience not found");
+      }
+
+      return this.prisma.experience.delete({
+        where: { id },
+      });
     }
   }
