@@ -48,15 +48,20 @@ export class CreateProjectDto {
   year?: number;
 
   @IsOptional()
-  @IsUrl()
+  @IsUrl({ require_tld: false })
   imageUrl?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsArray()
+  @IsString({ each: true })
+  galleryUrls?: string[];
+
+  @IsOptional()
+  @IsUrl({ require_tld: false })
   repoUrl?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsUrl({ require_tld: false })
   demoUrl?: string;
 
   @IsOptional()

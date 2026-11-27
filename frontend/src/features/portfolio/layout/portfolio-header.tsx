@@ -1,5 +1,6 @@
 "use client";
 
+import Wrapper from "@/components/shared/wrapper";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { useOwnerProfile } from "../hooks/use-owner-profile";
 
@@ -20,7 +21,7 @@ export function PortfolioHeader() {
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-surface-variant/60 bg-surface-container-lowest/80 shadow-[0_1px_8px_rgba(0,0,0,0.02)] backdrop-blur-md">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-space-md px-gutter">
+      <Wrapper className="flex h-20 items-center justify-between gap-space-md">
         <div className="flex items-center gap-space-md">
           <a className="group flex items-center gap-space-sm" href="#home">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-surface-variant bg-surface-container-low transition-colors group-hover:border-primary">
@@ -75,7 +76,7 @@ export function PortfolioHeader() {
             Let&apos;s Talk
           </a>
         </div>
-      </div>
+      </Wrapper>
     </header>
   );
 }

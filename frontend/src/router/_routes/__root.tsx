@@ -1,20 +1,32 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet, useRouterState } from "@tanstack/react-router";
 
-import { PortfolioFooter } from "@/features/portfolio/layout/portfolio-footer";
-import { PortfolioHeader } from "@/features/portfolio/layout/portfolio-header";
+import { AppSurface, SiteShell } from "@/components/layout/site-shell";
+import { RouteErrorFallback } from "@/components/layout/route-error-fallback";
 
 export const Route = createRootRoute({
   component: RootLayout,
+  errorComponent: RouteErrorFallback,
 });
 
 function RootLayout() {
-  return (
-    <div className="portfolio-app flex min-h-full flex-col bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
-      <PortfolioHeader />
-      <main className="min-h-screen w-full bg-surface pt-20">
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isStandalone =
+    pathname.startsWith("/admin") ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/account");
+
+  if (isStandalone) {
+    return (
+      <AppSurface>
         <Outlet />
-      </main>
-      <PortfolioFooter />
-    </div>
+      </AppSurface>
+    );
+  }
+
+  return (
+    <SiteShell>
+      <Outlet />
+    </SiteShell>
   );
 }

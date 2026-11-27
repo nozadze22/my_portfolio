@@ -157,13 +157,33 @@ export class SkillsService {
       }
     }
 
+    const updateData: Prisma.SkillUpdateInput = {};
+
+    if (data.name !== undefined) {
+      updateData.name = data.name.trim();
+    }
+    if (slug !== undefined) {
+      updateData.slug = slug;
+    }
+    if (data.category !== undefined) {
+      updateData.category = data.category;
+    }
+    if (data.iconUrl !== undefined) {
+      updateData.iconUrl = data.iconUrl;
+    }
+    if (data.color !== undefined) {
+      updateData.color = data.color;
+    }
+    if (data.published !== undefined) {
+      updateData.published = data.published;
+    }
+    if (data.sortOrder !== undefined) {
+      updateData.sortOrder = data.sortOrder;
+    }
+
     return this.prisma.skill.update({
       where: { id },
-      data: {
-        ...data,
-        name: data.name?.trim(),
-        slug,
-      },
+      data: updateData,
     });
   }
 

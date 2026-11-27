@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { type ReactNode, Suspense } from "react";
 
-import { TanStackPathHint } from "@/features/components/tanstack-path-hint";
+import { TanStackPathHint } from "@/app/components/tanstack-path-hint";
 import { TanStackRouterApp } from "@/providers/tanstack-router-app";
 
 import "./globals.css";

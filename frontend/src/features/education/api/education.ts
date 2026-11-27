@@ -1,9 +1,10 @@
 import { api } from "@/lib/api";
-import type {
-  CreateEducationInput,
-  Education,
-  EducationListResponse,
-  UpdateEducationInput,
+import {
+  educationListResponseSchema,
+  educationSchema,
+  type CreateEducationInput,
+  type Education,
+  type UpdateEducationInput,
 } from "../schema/education.schema";
 
 export type EducationListQuery = {
@@ -16,25 +17,29 @@ export async function getEducationList(query: EducationListQuery = {}) {
   params.set("page", String(query.page ?? 1));
   params.set("limit", String(query.limit ?? 10));
 
-  return api<EducationListResponse>(`/education?${params.toString()}`);
+  const raw = await api<unknown>(`/education?${params.toString()}`);
+  return educationListResponseSchema.parse(raw);
 }
 
 export async function createEducation(data: CreateEducationInput) {
-  return api<Education>("/education", {
+  const raw = await api<unknown>("/education", {
     method: "POST",
     body: JSON.stringify(data),
   });
+  return educationSchema.parse(raw);
 }
 
 export async function updateEducation(id: string, data: UpdateEducationInput) {
-  return api<Education>(`/education/${id}`, {
+  const raw = await api<unknown>(`/education/${id}`, {
     method: "PUT",
     body: JSON.stringify(data),
   });
+  return educationSchema.parse(raw);
 }
 
 export async function deleteEducation(id: string) {
-  return api<Education>(`/education/${id}`, {
+  const raw = await api<unknown>(`/education/${id}`, {
     method: "DELETE",
   });
+  return educationSchema.parse(raw);
 }

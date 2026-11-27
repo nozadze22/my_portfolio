@@ -92,6 +92,9 @@
   --text-label-badge--line-height: 1rem;
   --text-label-code: 0.8125rem;
   --text-label-code--line-height: 1.25rem;
+
+  /* Public site content cap (~1408px); see Wrapper */
+  --max-width-page: 88rem;
 }
 
 .portfolio-app ::-webkit-scrollbar {

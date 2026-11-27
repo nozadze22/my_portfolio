@@ -11,7 +11,10 @@ export const educationSchema = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date().nullable(),
   current: z.boolean(),
-  skills: z.array(skillOptionSchema).optional(),
+  skills: z.preprocess(
+    (val) => (val == null ? [] : val),
+    z.array(skillOptionSchema).default([]),
+  ),
   featured: z.boolean(),
   published: z.boolean(),
   sortOrder: z.number(),

@@ -1,11 +1,12 @@
+import { formatDisplayMonthYear } from "@/lib/format-display-date";
 import type { Experience } from "../schema/experience.schema";
 
 export function formatExperiencePeriod(exp: Experience) {
-  const start = exp.startDate.toLocaleDateString(undefined, { year: "numeric", month: "short" });
+  const start = formatDisplayMonthYear(exp.startDate);
   const end = exp.current
     ? "Present"
     : exp.endDate
-      ? exp.endDate.toLocaleDateString(undefined, { year: "numeric", month: "short" })
+      ? formatDisplayMonthYear(exp.endDate)
       : "";
   return `${start} — ${end}`;
 }

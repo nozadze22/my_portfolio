@@ -8,7 +8,7 @@ const experienceSummarySchema = z.object({
   description: z.string(),
   location: z.string().nullable(),
   employmentType: z
-    .enum(["FULL_TIME", "PART_TIME", "CONTRACT", "FREELANCE", "INTERNSHIP"])
+    .enum(["REMOTE", "FULL_TIME", "PART_TIME", "OTHER", "CONTRACT", "FREELANCE", "INTERNSHIP"])
     .nullable(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().nullable(),
@@ -34,6 +34,7 @@ export const projectSchema = z.object({
   year: z.number().nullable(),
 
   imageUrl: z.string().nullable(),
+  galleryUrls: z.array(z.string()).optional(),
   repoUrl: z.string().nullable(),
   demoUrl: z.string().nullable(),
 
@@ -66,6 +67,7 @@ export const createProjectInputSchema = z.object({
   role: z.string().optional(),
   year: z.number().int().optional(),
   imageUrl: z.string().url().optional(),
+  galleryUrls: z.array(z.string()).optional(),
   repoUrl: z.string().url().optional(),
   demoUrl: z.string().url().optional(),
   tags: z.array(z.string()).optional(),

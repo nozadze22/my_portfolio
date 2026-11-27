@@ -3,13 +3,14 @@
 import { EmptyHint } from "@/features/portfolio/components/empty-hint";
 import { SectionHeader } from "@/features/portfolio/components/section-header";
 import { SectionShell } from "@/features/portfolio/components/section-shell";
-import type { SkillCategory } from "../schema/skill.schema";
+import { SKILL_CATALOG_CATEGORIES } from "../schema/skill.schema";
+import { mergeOptionsByCategory } from "../lib/skill-catalog-groups";
 import { useSkillOptions } from "../hooks/skills";
 import { SkillCategoryCard } from "./skill-category-card";
 
 export function SkillsSection() {
   const { data, isLoading, isError } = useSkillOptions();
-  const byCategory = data?.byCategory;
+  const byCategory = data?.byCategory ? mergeOptionsByCategory(data.byCategory) : undefined;
 
   return (
     <SectionShell id="skills" className="bg-surface-container-lowest">
@@ -20,7 +21,9 @@ export function SkillsSection() {
       />
       {isLoading ? (
         <p className="text-center text-on-surface-variant">Loading skills…</p>
-      ) : isError || !byCategory || Object.keys(byCategory).length === 0 ? (
+      ) : isError ||
+        !byCategory ||
+        !SKILL_CATALOG_CATEGORIES.some((c) => (byCategory[c]?.length ?? 0) > 0) ? (
         <EmptyHint
           icon="build"
           title="No skills yet"
@@ -28,11 +31,11 @@ export function SkillsSection() {
         />
       ) : (
         <div className="grid gap-space-lg md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {(Object.entries(byCategory) as [SkillCategory, { name: string }[]][]).map(
-            ([category, items]) => (
-              <SkillCategoryCard key={category} category={category} items={items} />
-            ),
-          )}
+          {SKILL_CATALOG_CATEGORIES.map((category) => {
+            const items = byCategory[category];
+            if (!items?.length) return null;
+            return <SkillCategoryCard key={category} category={category} items={items} />;
+          })}
         </div>
       )}
     </SectionShell>

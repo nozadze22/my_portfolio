@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { assertSkillsExist } from "../../common/assert-skills-exist.js";
+import { parseDateOnly } from "../../common/parse-date-only.js";
 import { PrismaService } from "../../prisma/prisma.service.js";
 import { CreateEducationDto } from "./dto/create-education.dto.js";
 import { ListEducationDto } from "./dto/list-education.dto.js";
@@ -11,15 +12,22 @@ export class EducationService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateEducationDto) {
-    const { skillIds, ...educationData } = data;
+    const { skillIds, startDate, endDate, ...educationData } = data;
 
     if (skillIds !== undefined && skillIds.length > 0) {
       await assertSkillsExist(this.prisma, skillIds);
     }
 
+    const parsedStart = parseDateOnly(startDate);
+    if (!parsedStart) {
+      throw new BadRequestException("Invalid startDate");
+    }
+
     return this.prisma.education.create({
       data: {
         ...educationData,
+        startDate: parsedStart,
+        endDate: parseDateOnly(endDate),
         ...(skillIds?.length && {
           skills: {
             connect: skillIds.map((id) => ({ id })),
@@ -76,7 +84,7 @@ export class EducationService {
       throw new NotFoundException("Education not found");
     }
 
-    const { skillIds, ...educationData } = data;
+    const { skillIds, startDate, endDate, ...educationData } = data;
 
     if (skillIds !== undefined && skillIds.length > 0) {
       await assertSkillsExist(this.prisma, skillIds);
@@ -86,6 +94,12 @@ export class EducationService {
       where: { id },
       data: {
         ...educationData,
+        ...(startDate !== undefined && {
+          startDate: parseDateOnly(startDate),
+        }),
+        ...(endDate !== undefined && {
+          endDate: parseDateOnly(endDate),
+        }),
         ...(skillIds !== undefined && {
           skills: {
             set: skillIds.map((skillId) => ({ id: skillId })),

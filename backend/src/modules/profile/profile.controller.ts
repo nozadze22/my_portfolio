@@ -1,11 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Headers,
-  Patch,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Body, Controller, Get, Patch } from "@nestjs/common";
+import { UserRole } from "@prisma/client";
+import { Public } from "../../common/decorators/public.decorator.js";
+import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UpdateProfileDto } from "./dto/update-profile.dto.js";
 import { ProfileService } from "./profile.service.js";
 
@@ -13,22 +9,15 @@ import { ProfileService } from "./profile.service.js";
 export class ProfileController {
   constructor(private readonly profile: ProfileService) {}
 
+  @Public()
   @Get()
   get() {
     return this.profile.get();
   }
 
+  @Roles(UserRole.ADMIN)
   @Patch()
-  update(
-    @Headers("x-admin-key") adminKey: string | undefined,
-    @Body() dto: UpdateProfileDto,
-  ) {
-    const expected = process.env.ADMIN_API_KEY;
-
-    if (!expected || adminKey !== expected) {
-      throw new UnauthorizedException("Invalid admin key");
-    }
-
+  update(@Body() dto: UpdateProfileDto) {
     return this.profile.update(dto);
   }
 }

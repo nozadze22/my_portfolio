@@ -1,5 +1,6 @@
 "use client";
 
+import Wrapper from "@/components/shared/wrapper";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { ProfileError, ProfileLoading } from "../components/profile-load-state";
 import { useOwnerProfile } from "../hooks/use-owner-profile";
@@ -13,7 +14,7 @@ export function HomeSection() {
       className="relative w-full overflow-hidden bg-surface-container-lowest py-space-xl lg:py-24"
     >
       <div className="pointer-events-none absolute top-0 right-1/4 -z-10 h-96 w-96 rounded-full bg-secondary-container/20 blur-3xl" />
-      <div className="mx-auto max-w-7xl px-gutter">
+      <Wrapper>
         {isLoading ? (
           <ProfileLoading />
         ) : isError || !profile ? (
@@ -68,7 +69,7 @@ export function HomeSection() {
             </div>
           </div>
         )}
-      </div>
+      </Wrapper>
     </section>
   );
 }

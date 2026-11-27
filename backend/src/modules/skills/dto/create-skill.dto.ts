@@ -1,5 +1,5 @@
 import {
-  IsEnum,
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -11,6 +11,7 @@ import {
   Matches,
 } from "class-validator";
 import { SkillCategory } from "@prisma/client";
+import { SKILL_CATALOG_CATEGORIES } from "../skill-catalog-categories.js";
 
 export class CreateSkillDto {
   @IsString()
@@ -25,7 +26,7 @@ export class CreateSkillDto {
   slug?: string;
 
   @IsOptional()
-  @IsEnum(SkillCategory)
+  @IsIn(SKILL_CATALOG_CATEGORIES)
   category?: SkillCategory;
 
   @IsOptional()

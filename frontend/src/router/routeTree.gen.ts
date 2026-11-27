@@ -11,6 +11,20 @@
 import { Route as rootRouteImport } from './_routes/__root'
 import { Route as IndexRouteImport } from './_routes/index'
 import { Route as AboutRouteImport } from './_routes/about'
+import { Route as AccountRouteImport } from './_routes/account'
+import { Route as AdminRouteRouteImport } from './_routes/admin/route'
+import { Route as LoginRouteImport } from './_routes/login'
+import { Route as RegisterRouteImport } from './_routes/register'
+import { Route as AdminIndexRouteImport } from './_routes/admin/index'
+import { Route as AdminDashboardRouteRouteImport } from './_routes/admin/dashboard/route'
+import { Route as AdminLoginRouteImport } from './_routes/admin/login'
+import { Route as AdminRegisterRouteImport } from './_routes/admin/register'
+import { Route as AdminDashboardIndexRouteImport } from './_routes/admin/dashboard/index'
+import { Route as AdminDashboardEducationRouteImport } from './_routes/admin/dashboard/education'
+import { Route as AdminDashboardExperienceRouteImport } from './_routes/admin/dashboard/experience'
+import { Route as AdminDashboardProfileRouteImport } from './_routes/admin/dashboard/profile'
+import { Route as AdminDashboardProjectsRouteImport } from './_routes/admin/dashboard/projects'
+import { Route as AdminDashboardSkillsRouteImport } from './_routes/admin/dashboard/skills'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +36,193 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminRegisterRoute = AdminRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminDashboardIndexRoute = AdminDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminDashboardRouteRoute,
+} as any)
+const AdminDashboardEducationRoute = AdminDashboardEducationRouteImport.update({
+  id: '/education',
+  path: '/education',
+  getParentRoute: () => AdminDashboardRouteRoute,
+} as any)
+const AdminDashboardExperienceRoute =
+  AdminDashboardExperienceRouteImport.update({
+    id: '/experience',
+    path: '/experience',
+    getParentRoute: () => AdminDashboardRouteRoute,
+  } as any)
+const AdminDashboardProfileRoute = AdminDashboardProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AdminDashboardRouteRoute,
+} as any)
+const AdminDashboardProjectsRoute = AdminDashboardProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AdminDashboardRouteRoute,
+} as any)
+const AdminDashboardSkillsRoute = AdminDashboardSkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => AdminDashboardRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/admin/dashboard': typeof AdminDashboardRouteRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/register': typeof AdminRegisterRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/dashboard/education': typeof AdminDashboardEducationRoute
+  '/admin/dashboard/experience': typeof AdminDashboardExperienceRoute
+  '/admin/dashboard/profile': typeof AdminDashboardProfileRoute
+  '/admin/dashboard/projects': typeof AdminDashboardProjectsRoute
+  '/admin/dashboard/skills': typeof AdminDashboardSkillsRoute
+  '/admin/dashboard/': typeof AdminDashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/register': typeof AdminRegisterRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/dashboard/education': typeof AdminDashboardEducationRoute
+  '/admin/dashboard/experience': typeof AdminDashboardExperienceRoute
+  '/admin/dashboard/profile': typeof AdminDashboardProfileRoute
+  '/admin/dashboard/projects': typeof AdminDashboardProjectsRoute
+  '/admin/dashboard/skills': typeof AdminDashboardSkillsRoute
+  '/admin/dashboard': typeof AdminDashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/admin/dashboard': typeof AdminDashboardRouteRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/register': typeof AdminRegisterRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/dashboard/education': typeof AdminDashboardEducationRoute
+  '/admin/dashboard/experience': typeof AdminDashboardExperienceRoute
+  '/admin/dashboard/profile': typeof AdminDashboardProfileRoute
+  '/admin/dashboard/projects': typeof AdminDashboardProjectsRoute
+  '/admin/dashboard/skills': typeof AdminDashboardSkillsRoute
+  '/admin/dashboard/': typeof AdminDashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/about'
+    | '/account'
+    | '/login'
+    | '/register'
+    | '/admin/dashboard'
+    | '/admin/login'
+    | '/admin/register'
+    | '/admin/'
+    | '/admin/dashboard/education'
+    | '/admin/dashboard/experience'
+    | '/admin/dashboard/profile'
+    | '/admin/dashboard/projects'
+    | '/admin/dashboard/skills'
+    | '/admin/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/about'
+    | '/account'
+    | '/login'
+    | '/register'
+    | '/admin/login'
+    | '/admin/register'
+    | '/admin'
+    | '/admin/dashboard/education'
+    | '/admin/dashboard/experience'
+    | '/admin/dashboard/profile'
+    | '/admin/dashboard/projects'
+    | '/admin/dashboard/skills'
+    | '/admin/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/about'
+    | '/account'
+    | '/login'
+    | '/register'
+    | '/admin/dashboard'
+    | '/admin/login'
+    | '/admin/register'
+    | '/admin/'
+    | '/admin/dashboard/education'
+    | '/admin/dashboard/experience'
+    | '/admin/dashboard/profile'
+    | '/admin/dashboard/projects'
+    | '/admin/dashboard/skills'
+    | '/admin/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AccountRoute: typeof AccountRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +241,153 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/register': {
+      id: '/admin/register'
+      path: '/register'
+      fullPath: '/admin/register'
+      preLoaderRoute: typeof AdminRegisterRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/dashboard/': {
+      id: '/admin/dashboard/'
+      path: '/'
+      fullPath: '/admin/dashboard/'
+      preLoaderRoute: typeof AdminDashboardIndexRouteImport
+      parentRoute: typeof AdminDashboardRouteRoute
+    }
+    '/admin/dashboard/education': {
+      id: '/admin/dashboard/education'
+      path: '/education'
+      fullPath: '/admin/dashboard/education'
+      preLoaderRoute: typeof AdminDashboardEducationRouteImport
+      parentRoute: typeof AdminDashboardRouteRoute
+    }
+    '/admin/dashboard/experience': {
+      id: '/admin/dashboard/experience'
+      path: '/experience'
+      fullPath: '/admin/dashboard/experience'
+      preLoaderRoute: typeof AdminDashboardExperienceRouteImport
+      parentRoute: typeof AdminDashboardRouteRoute
+    }
+    '/admin/dashboard/profile': {
+      id: '/admin/dashboard/profile'
+      path: '/profile'
+      fullPath: '/admin/dashboard/profile'
+      preLoaderRoute: typeof AdminDashboardProfileRouteImport
+      parentRoute: typeof AdminDashboardRouteRoute
+    }
+    '/admin/dashboard/projects': {
+      id: '/admin/dashboard/projects'
+      path: '/projects'
+      fullPath: '/admin/dashboard/projects'
+      preLoaderRoute: typeof AdminDashboardProjectsRouteImport
+      parentRoute: typeof AdminDashboardRouteRoute
+    }
+    '/admin/dashboard/skills': {
+      id: '/admin/dashboard/skills'
+      path: '/skills'
+      fullPath: '/admin/dashboard/skills'
+      preLoaderRoute: typeof AdminDashboardSkillsRouteImport
+      parentRoute: typeof AdminDashboardRouteRoute
+    }
   }
 }
 
+interface AdminDashboardRouteRouteChildren {
+  AdminDashboardEducationRoute: typeof AdminDashboardEducationRoute
+  AdminDashboardExperienceRoute: typeof AdminDashboardExperienceRoute
+  AdminDashboardProfileRoute: typeof AdminDashboardProfileRoute
+  AdminDashboardProjectsRoute: typeof AdminDashboardProjectsRoute
+  AdminDashboardSkillsRoute: typeof AdminDashboardSkillsRoute
+  AdminDashboardIndexRoute: typeof AdminDashboardIndexRoute
+}
+
+const AdminDashboardRouteRouteChildren: AdminDashboardRouteRouteChildren = {
+  AdminDashboardEducationRoute: AdminDashboardEducationRoute,
+  AdminDashboardExperienceRoute: AdminDashboardExperienceRoute,
+  AdminDashboardProfileRoute: AdminDashboardProfileRoute,
+  AdminDashboardProjectsRoute: AdminDashboardProjectsRoute,
+  AdminDashboardSkillsRoute: AdminDashboardSkillsRoute,
+  AdminDashboardIndexRoute: AdminDashboardIndexRoute,
+}
+
+const AdminDashboardRouteRouteWithChildren =
+  AdminDashboardRouteRoute._addFileChildren(AdminDashboardRouteRouteChildren)
+
+interface AdminRouteRouteChildren {
+  AdminDashboardRouteRoute: typeof AdminDashboardRouteRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminRegisterRoute: typeof AdminRegisterRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminDashboardRouteRoute: AdminDashboardRouteRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminRegisterRoute: AdminRegisterRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  AccountRoute: AccountRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

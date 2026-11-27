@@ -134,6 +134,10 @@ export class ProjectsService {
         );
       }
   
+      const galleryUrls = projectData.galleryUrls ?? [];
+      const imageUrl =
+        projectData.imageUrl ?? (galleryUrls.length > 0 ? galleryUrls[0] : undefined);
+
       return this.prisma.project.create({
         data: {
           title: projectData.title.trim(),
@@ -143,7 +147,8 @@ export class ProjectsService {
           category: projectData.category,
           role: projectData.role,
           year: projectData.year,
-          imageUrl: projectData.imageUrl,
+          imageUrl,
+          galleryUrls,
           repoUrl: projectData.repoUrl,
           demoUrl: projectData.demoUrl,
           tags: projectData.tags ?? [],

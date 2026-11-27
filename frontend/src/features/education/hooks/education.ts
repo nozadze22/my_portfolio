@@ -57,3 +57,31 @@ export function useDeleteEducation(id: string) {
     onError: () => toast.error("Failed to remove education"),
   });
 }
+
+export function useUpdateEducationEntry() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateEducationInput }) =>
+      updateEducation(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["education"] });
+      toast.success("Education updated");
+    },
+    onError: () => toast.error("Failed to update education"),
+  });
+}
+
+/** List screens: pass id per call */
+export function useDeleteEducationEntry() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => deleteEducation(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["education"] });
+      toast.success("Education removed");
+    },
+    onError: () => toast.error("Failed to remove education"),
+  });
+}

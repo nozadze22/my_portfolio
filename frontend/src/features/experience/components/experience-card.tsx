@@ -1,3 +1,4 @@
+import { formatEmploymentType } from "../lib/employment-type-labels";
 import type { Experience } from "../schema/experience.schema";
 import { formatExperiencePeriod } from "./experience-utils";
 
@@ -13,9 +14,9 @@ export function ExperienceCard({ exp, accent }: { exp: Experience; accent: boole
         <span className={`font-label-badge uppercase font-semibold ${periodColor}`}>
           {formatExperiencePeriod(exp)}
         </span>
-        {exp.employmentType ? (
+        {formatEmploymentType(exp.employmentType) ? (
           <span className="block font-label-code text-[11px] text-on-surface-variant">
-            {exp.employmentType.replace("_", " ")}
+            {formatEmploymentType(exp.employmentType)}
           </span>
         ) : null}
       </div>

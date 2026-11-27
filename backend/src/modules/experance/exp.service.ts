@@ -1,9 +1,11 @@
 import {
+    BadRequestException,
     Injectable,
     NotFoundException,
   } from "@nestjs/common";
   
   import { assertSkillsExist } from "../../common/assert-skills-exist.js";
+  import { parseDateOnly } from "../../common/parse-date-only.js";
   import { PrismaService } from "../../prisma/prisma.service.js";
   import { CreateExperienceDto } from "./dto/create_exp.dto.js";
 import { ExperienceListDto } from "./dto/list_exp.dto.js";
@@ -15,7 +17,7 @@ import { UpdateExperienceDto } from "./dto/update_exp.dot.js";
     constructor(private readonly prisma: PrismaService) {}
   
     async createExperience(data: CreateExperienceDto) {
-      const { projectIds, skillIds, ...experienceData } = data;
+      const { projectIds, skillIds, startDate, endDate, ...experienceData } = data;
 
       if (skillIds !== undefined && skillIds.length > 0) {
         await assertSkillsExist(this.prisma, skillIds);
@@ -36,10 +38,17 @@ import { UpdateExperienceDto } from "./dto/update_exp.dot.js";
         }
       }
   
+      const parsedStart = parseDateOnly(startDate);
+      if (!parsedStart) {
+        throw new BadRequestException("Invalid startDate");
+      }
+
       return this.prisma.experience.create({
         data: {
           ...experienceData,
-  
+          startDate: parsedStart,
+          endDate: parseDateOnly(endDate),
+
           ...(projectIds?.length && {
             projects: {
               connect: projectIds.map((id) => ({ id })),
@@ -111,7 +120,7 @@ import { UpdateExperienceDto } from "./dto/update_exp.dot.js";
         throw new NotFoundException("Experience not found");
       }
 
-      const { projectIds, skillIds, ...experienceData } = data;
+      const { projectIds, skillIds, startDate, endDate, ...experienceData } = data;
 
       if (skillIds !== undefined && skillIds.length > 0) {
         await assertSkillsExist(this.prisma, skillIds);
@@ -132,6 +141,12 @@ import { UpdateExperienceDto } from "./dto/update_exp.dot.js";
         where: { id },
         data: {
           ...experienceData,
+          ...(startDate !== undefined && {
+            startDate: parseDateOnly(startDate),
+          }),
+          ...(endDate !== undefined && {
+            endDate: parseDateOnly(endDate),
+          }),
           ...(projectIds !== undefined && {
             projects: {
               set: projectIds.map((projectId) => ({ id: projectId })),

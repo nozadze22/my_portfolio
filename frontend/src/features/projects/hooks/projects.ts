@@ -14,8 +14,18 @@ import type { ProjectListQuery } from "../schema/pagination.schema";
 import { toast } from "sonner";
 
 export function useGetProjects(query: ProjectListQuery = {}) {
+  const {
+    page = 1,
+    limit = 10,
+    featured,
+    search,
+    sortOrder,
+    skillId,
+    skillSlug,
+  } = query;
+
   return useQuery({
-    queryKey: ["projects", query],
+    queryKey: ["projects", page, limit, featured, search, sortOrder, skillId, skillSlug],
     queryFn: () => getProjects(query),
   });
 }
@@ -75,5 +85,30 @@ export function useDeleteProject(id: string) {
     onError: () => {
       toast.error("Failed to delete project");
     },
+  });
+}
+
+export function useDeleteProjectEntry() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteProject(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      toast.success("Project deleted");
+    },
+    onError: () => toast.error("Failed to delete project"),
+  });
+}
+
+export function useUpdateProjectEntry() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateProjectInput }) => updateProject(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project", id] });
+      toast.success("Project updated");
+    },
+    onError: () => toast.error("Failed to update project"),
   });
 }

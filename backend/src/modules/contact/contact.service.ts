@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service.js";
 import { CreateContactDto } from "./dot/contact.dto.js";
-import { skip } from "node:test";
 
 
 @Injectable()

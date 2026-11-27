@@ -1,5 +1,7 @@
 "use client";
 
+import { Link } from "@tanstack/react-router";
+import Wrapper from "@/components/shared/wrapper";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { useOwnerProfile } from "../hooks/use-owner-profile";
 
@@ -9,9 +11,9 @@ export function PortfolioFooter() {
   if (!profile) {
     return (
       <footer className="w-full border-t border-surface-variant bg-surface-container-lowest">
-        <div className="mx-auto max-w-7xl px-gutter py-space-xl">
+        <Wrapper className="py-space-xl">
           <p className="text-center text-xs text-outline">Portfolio</p>
-        </div>
+        </Wrapper>
       </footer>
     );
   }
@@ -20,13 +22,12 @@ export function PortfolioFooter() {
   const socials = [
     profile.githubUrl && { href: profile.githubUrl, icon: "code" as const },
     profile.linkedinUrl && { href: profile.linkedinUrl, icon: "share" as const },
-    profile.twitterUrl && { href: profile.twitterUrl, icon: "terminal" as const },
     { href: `mailto:${profile.email}`, icon: "mail" as const },
   ].filter(Boolean) as { href: string; icon: string }[];
 
   return (
     <footer className="w-full border-t border-surface-variant bg-surface-container-lowest">
-      <div className="mx-auto max-w-7xl px-gutter py-space-xl">
+      <Wrapper className="py-space-xl">
         <div className="flex flex-col items-center justify-between gap-space-md md:flex-row">
           <div className="flex flex-col items-center gap-2 md:items-start">
             <span className="font-label-badge text-primary">{label}</span>
@@ -50,9 +51,12 @@ export function PortfolioFooter() {
           </div>
         </div>
         <p className="mt-space-lg text-center text-xs text-outline">
-          Personal portfolio — single owner mode.
+          Personal portfolio — single owner mode.{" "}
+          <Link to="/login" search={{ next: undefined }} className="text-primary hover:underline">
+            Sign in
+          </Link>
         </p>
-      </div>
+      </Wrapper>
     </footer>
   );
 }

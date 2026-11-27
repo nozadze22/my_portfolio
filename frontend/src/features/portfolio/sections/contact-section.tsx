@@ -1,6 +1,7 @@
 "use client";
 
 import { type FormEvent, useState } from "react";
+import Wrapper from "@/components/shared/wrapper";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { useSendContact } from "@/features/contact/hooks/conatct";
 import { ProfileError, ProfileLoading } from "../components/profile-load-state";
@@ -47,7 +48,7 @@ export function ContactSection() {
       id="contact"
       className="w-full border-t border-surface-variant/40 bg-surface-container-low py-space-xl lg:py-28"
     >
-      <div className="mx-auto grid max-w-7xl gap-space-xl px-gutter lg:grid-cols-2">
+      <Wrapper className="grid gap-space-xl lg:grid-cols-2">
         {isLoading ? (
           <ProfileLoading />
         ) : isError || !profile ? (
@@ -97,7 +98,7 @@ export function ContactSection() {
             </form>
           </>
         )}
-      </div>
+      </Wrapper>
     </section>
   );
 }

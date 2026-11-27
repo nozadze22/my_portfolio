@@ -1,8 +1,7 @@
 "use client";
 
 import { EmptyHint } from "@/features/portfolio/components/empty-hint";
-import { SectionHeader } from "@/features/portfolio/components/section-header";
-import { SectionShell } from "@/features/portfolio/components/section-shell";
+import { SectionHeader, SectionShell } from "@/components/layout";
 import { useGetProjects } from "../hooks/projects";
 import { ProjectCard } from "./project-card";
 

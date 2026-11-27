@@ -44,17 +44,6 @@ export function AboutSection() {
               {profile.location ? (
                 <InfoRow icon="location_on" label="Location" value={profile.location} />
               ) : null}
-              {profile.websiteUrl ? (
-                <a
-                  href={profile.websiteUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-surface-variant bg-surface-container-low px-space-md py-3 text-sm font-medium text-primary hover:bg-surface-container-high"
-                >
-                  <MaterialSymbol name="language" className="text-[18px]" />
-                  Website
-                </a>
-              ) : null}
             </aside>
           </div>
         </>

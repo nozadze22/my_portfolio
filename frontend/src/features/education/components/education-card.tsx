@@ -1,12 +1,13 @@
 import { MaterialSymbol } from "@/components/ui/material-symbol";
+import { formatDisplayMonthYear } from "@/lib/format-display-date";
 import type { Education } from "../schema/education.schema";
 
 export function formatEducationDates(edu: Education) {
-  const start = edu.startDate.toLocaleDateString(undefined, { year: "numeric", month: "short" });
+  const start = formatDisplayMonthYear(edu.startDate);
   const end = edu.current
     ? "Present"
     : edu.endDate
-      ? edu.endDate.toLocaleDateString(undefined, { year: "numeric", month: "short" })
+      ? formatDisplayMonthYear(edu.endDate)
       : "";
   return `${start} — ${end}`;
 }

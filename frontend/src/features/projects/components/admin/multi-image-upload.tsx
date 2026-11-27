@@ -1,0 +1,1 @@
+export { ImageUploadField as MultiImageUpload } from "@/components/shared/uploads/image-upload-field";

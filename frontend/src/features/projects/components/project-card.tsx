@@ -1,9 +1,10 @@
 import { MaterialSymbol } from "@/components/ui/material-symbol";
+import { getProjectTagLabels } from "../lib/project-tags";
 import type { Project } from "../schema/project_schema";
 
 export function ProjectCard({ project }: { project: Project }) {
   const tags =
-    project.skills?.map((s) => s.name) ?? project.technologies ?? project.tags;
+    getProjectTagLabels(project);
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-surface-variant bg-surface-container-lowest shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">

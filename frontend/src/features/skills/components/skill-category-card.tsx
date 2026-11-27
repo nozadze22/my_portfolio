@@ -1,13 +1,18 @@
+"use client";
+
 import { MaterialSymbol } from "@/components/ui/material-symbol";
-import type { SkillCategory } from "../schema/skill.schema";
+import type { SkillCategory, SkillOption } from "../schema/skill.schema";
+import { SkillIconCover } from "./skill-icon-cover";
 import { CATEGORY_LABEL } from "./skill-category-labels";
+
+type SkillTagItem = Pick<SkillOption, "id" | "name" | "category" | "iconUrl" | "color">;
 
 export function SkillCategoryCard({
   category,
   items,
 }: {
   category: SkillCategory;
-  items: { name: string; color?: string | null }[];
+  items: SkillTagItem[];
 }) {
   const meta = CATEGORY_LABEL[category] ?? CATEGORY_LABEL.OTHER;
 
@@ -24,16 +29,27 @@ export function SkillCategoryCard({
   );
 }
 
-function SkillTags({ items }: { items: { name: string; color?: string | null }[] }) {
+function SkillTags({ items }: { items: SkillTagItem[] }) {
   return (
     <div className="flex flex-wrap gap-2">
       {items.map((skill) => (
         <span
-          key={skill.name}
-          className="rounded-full border border-surface-variant bg-surface-container-low px-3 py-1 font-label-code text-[12px] text-on-surface"
+          key={skill.id}
+          className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-surface-variant bg-surface-container-low py-1 pl-1 pr-2.5 font-label-code text-[12px] text-on-surface"
           style={skill.color ? { borderColor: skill.color, color: skill.color } : undefined}
         >
-          {skill.name}
+          {skill.iconUrl?.trim() ? (
+            <SkillIconCover
+              name={skill.name}
+              category={skill.category}
+              iconUrl={skill.iconUrl}
+              color={skill.color}
+              size="xs"
+              rounded="full"
+              className="shrink-0 border-0 bg-transparent"
+            />
+          ) : null}
+          <span className="truncate">{skill.name}</span>
         </span>
       ))}
     </div>

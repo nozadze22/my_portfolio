@@ -12,6 +12,19 @@ export const skillCategorySchema = z.enum([
 
 export type SkillCategory = z.infer<typeof skillCategorySchema>;
 
+/** Categories shown in admin + public skills UI */
+export const SKILL_CATALOG_CATEGORIES = [
+  "LANGUAGE",
+  "FRAMEWORK",
+  "LIBRARY",
+  "TOOL",
+  "OTHER",
+] as const;
+
+export const skillCatalogCategorySchema = z.enum(SKILL_CATALOG_CATEGORIES);
+
+export type SkillCatalogCategory = z.infer<typeof skillCatalogCategorySchema>;
+
 export const skillSchema = z.object({
   id: z.string(),
   name: z.string(),

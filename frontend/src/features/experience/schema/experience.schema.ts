@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { skillOptionSchema } from "@/features/skills/schema/skill.schema";
+import { employmentTypeSchema } from "./employment-type.schema";
 
 const projectStubSchema = z.object({
   id: z.string(),
@@ -13,9 +14,7 @@ export const experienceSchema = z.object({
   position: z.string(),
   description: z.string(),
   location: z.string().nullable(),
-  employmentType: z
-    .enum(["FULL_TIME", "PART_TIME", "CONTRACT", "FREELANCE", "INTERNSHIP"])
-    .nullable(),
+  employmentType: employmentTypeSchema.nullable(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().nullable(),
   current: z.boolean(),
