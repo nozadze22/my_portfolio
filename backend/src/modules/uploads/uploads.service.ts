@@ -21,21 +21,30 @@ export class UploadsService {
 
     const urls: string[] = [];
 
+    const r2Ready = this.r2.isEnabled() && this.r2.hasPublicUrl();
+    const isProd = process.env.NODE_ENV === "production";
+
     for (const file of files) {
       assertValidImageFile(file);
       const key = imageObjectKey(file);
 
-      if (this.r2.isEnabled() && this.r2.hasPublicUrl()) {
+      if (r2Ready) {
         const url = await this.r2.putImage(scope, key, file.buffer, file.mimetype);
         urls.push(url);
         continue;
+      }
+
+      if (isProd) {
+        throw new BadRequestException(
+          "Image upload requires Cloudflare R2 on the API host. Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_ACCESS_KEY_SECRET, R2_BUCKET, and R2_PUBLIC_BASE_URL in Fly secrets, then redeploy.",
+        );
       }
 
       const url = await this.saveLocal(scope, key, file.buffer);
       urls.push(url);
     }
 
-    return { urls, storage: this.r2.isEnabled() && this.r2.hasPublicUrl() ? "r2" : "local" };
+    return { urls, storage: r2Ready ? "r2" : "local" };
   }
 
   /** @deprecated use saveImages(..., "projects") */
