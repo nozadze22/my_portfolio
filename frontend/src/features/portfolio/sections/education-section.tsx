@@ -1,0 +1,1 @@
+export { EducationSection } from "@/features/education/components/education-section";
