@@ -50,6 +50,8 @@ Open: `https://portfolio.fly.dev` (or your app name).
 
 Health check: `GET /profile` (public) or your API root.
 
+Release step runs `pnpm exec prisma migrate deploy` (Prisma 6 from the image — not `npx`, which can pull Prisma 8 and fail).
+
 ## Frontend
 
 Set `NEXT_PUBLIC_API_URL=https://portfolio.fly.dev` in the Next.js `.env.production` or hosting env.

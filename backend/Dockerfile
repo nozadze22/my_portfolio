@@ -16,6 +16,8 @@ COPY . .
 RUN pnpm exec prisma generate
 RUN pnpm run build
 RUN pnpm prune --prod
+# Fly release_command: migrate deploy (prisma is a devDep, re-add matching CLI version)
+RUN pnpm add prisma@6.16.2
 
 FROM base AS runner
 ENV NODE_ENV=production
