@@ -1,10 +1,14 @@
 # GitHub Actions — tokens & deploy
 
-## რა ხდება `main`-ზე push-ისას
+## როდის იშვება Actions
 
-1. **CI** — lint, test, build (backend + frontend).
-2. CI თუ **green** → **Deploy** — `fly deploy` (`giorgi-portfolio-api`).
-3. **Frontend** — Vercel-ზე ჩვეულებრივ **Git-ინტეგრაციით** (ცალკე token Actions-ში არ სჭირდება).
+| მოვლენა | CI | Deploy (Fly) |
+|---------|----|--------------|
+| push მხოლოდ `designe`-ზე | არა | არა |
+| **PR → `main`** | კი (შემოწმება) | არა |
+| **merge / push `main`-ზე** | კი | კი (CI green-ის შემდეგ) |
+
+**Frontend** — Vercel Git integration (`main` push).
 
 ---
 
