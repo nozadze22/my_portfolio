@@ -27,7 +27,7 @@ If you create a new app, run `fly apps create <your-name>` and set `app = '<your
 
 ```bash
 fly secrets set \
-  DATABASE_URL="postgresql://..." \
+  DATABASE_URL="postgresql://...-pooler....neon.tech/neondb?sslmode=require" \
   JWT_SECRET="long-random-string" \
   CORS_ORIGIN="https://your-frontend.example.com" \
   R2_ACCOUNT_ID="..." \
@@ -38,6 +38,8 @@ fly secrets set \
 ```
 
 Optional: `SITE_OWNER_*`, `REGISTRATION_OPEN`, `JWT_EXPIRES`, etc. (see `.env.example`).
+
+**Neon + migrations:** `DATABASE_URL` can stay on the **pooler** for the API. On deploy, `prisma/fly-migrate-deploy.sh` auto-strips `-pooler` from the host only while running `migrate deploy` (avoids P1002).
 
 ## Deploy
 
@@ -50,7 +52,7 @@ Open: `https://portfolio.fly.dev` (or your app name).
 
 Health check: `GET /profile` (public) or your API root.
 
-Release step runs `pnpm exec prisma migrate deploy` (Prisma 6 from the image — not `npx`, which can pull Prisma 8 and fail).
+Release step runs `sh prisma/fly-migrate-deploy.sh` → `prisma migrate deploy` on a **direct** DB URL (Prisma 6 from the image — not `npx`, which can pull Prisma 8 and fail).
 
 ## Frontend
 
