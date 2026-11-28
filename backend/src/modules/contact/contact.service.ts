@@ -42,6 +42,7 @@ export class ContactService {
           email: true,
           phone: true,
           message: true,
+          isRead: true,
           createdAt: true,
         },
         take: limit,
@@ -51,10 +52,15 @@ export class ContactService {
       this.prisma.contactMessage.count(),
     ]);
 
+    const unreadCount = await this.prisma.contactMessage.count({
+      where: { isRead: false },
+    });
+
     return {
       data: messages,
       meta: {
         total,
+        unread: unreadCount,
         page,
         limit,
         totalPages: Math.ceil(total / limit),
@@ -62,5 +68,28 @@ export class ContactService {
         hasPreviousPage: page > 1,
       },
     };
+  }
+
+  async markRead(id: string) {
+    const existing = await this.prisma.contactMessage.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (!existing) {
+      return null;
+    }
+    return this.prisma.contactMessage.update({
+      where: { id },
+      data: { isRead: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        message: true,
+        isRead: true,
+        createdAt: true,
+      },
+    });
   }
 }

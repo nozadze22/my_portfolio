@@ -1,6 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { RegisterPage } from "@/features/auth/pages/register-page";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+
+// Registration UI disabled for now — single owner uses login only.
+// Re-enable: import RegisterPage and use `component: RegisterPage` instead of redirect.
 
 export const Route = createFileRoute("/register")({
-  component: RegisterPage,
+  beforeLoad: () => {
+    throw redirect({ to: "/login", search: { next: undefined } });
+  },
 });

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { cn } from "@/lib/utils";
-import { authInputClass } from "./auth-form-styles";
+import { authInsetInputClass } from "./auth-form-styles";
 
 type AuthFormFieldProps<T extends FieldValues> = {
   control: Control<T>;
@@ -41,10 +41,10 @@ export function AuthFormField<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem className={itemClassName}>
           {hideLabel ? null : (
-            <FormLabel className="flex w-full items-center justify-between font-label-code text-label-code font-semibold">
+            <FormLabel className="flex w-full items-center justify-between font-label-code text-label-code font-semibold text-on-surface">
               <span>{label}</span>
               {labelAside ? (
                 <span className="text-[11px] font-normal text-outline">{labelAside}</span>
@@ -58,11 +58,13 @@ export function AuthFormField<T extends FieldValues>({
               {...field}
               {...inputProps}
               symbol={symbol}
+              inset
+              invalid={!!fieldState.error}
               value={typeof field.value === "string" ? field.value : String(field.value ?? "")}
-              className={cn(authInputClass, inputClassName)}
+              className={cn(authInsetInputClass, inputClassName)}
             />
           </FormControlInput>
-          <FormMessage />
+          <FormMessage className="flex items-center gap-1 text-[13px]" />
         </FormItem>
       )}
     />
@@ -74,7 +76,7 @@ export function AuthFormEmailField<T extends FieldValues>({
   name,
   label = "Email",
   placeholder = "you@example.com",
-  hint = "Primary directory",
+  hint,
   ...rest
 }: {
   control: Control<T>;
@@ -90,7 +92,7 @@ export function AuthFormEmailField<T extends FieldValues>({
       name={name}
       label={label}
       hint={hint}
-      symbol="alternate_email"
+      symbol="mail"
       type="email"
       autoComplete="email"
       placeholder={placeholder}
@@ -128,40 +130,42 @@ export function AuthFormPasswordField<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem className={itemClassName}>
-          <FormLabel className="flex w-full items-center justify-between font-label-code text-label-code font-semibold">
+          <FormLabel className="flex w-full items-center justify-between font-label-code text-label-code font-semibold text-on-surface">
             <span>{label}</span>
             {labelAside ? (
               <span className="text-[11px] font-normal text-outline">{labelAside}</span>
             ) : null}
           </FormLabel>
-          <div className="relative">
-            <FormControlInput>
-              <IconInput
-                {...field}
-                symbol="key"
-                type={visible ? "text" : "password"}
-                required={required}
-                minLength={minLength}
-                autoComplete={confirm ? "new-password" : "current-password"}
-                placeholder="••••••••••••"
-                value={field.value ?? ""}
-                className={cn(authInputClass, showToggle && "pr-12")}
-              />
-            </FormControlInput>
-            {showToggle ? (
-              <button
-                type="button"
-                aria-label="Toggle password visibility"
-                className="absolute right-3.5 top-1/2 flex -translate-y-1/2 items-center justify-center p-1 text-outline transition-colors hover:text-on-surface"
-                onClick={() => setVisible((v) => !v)}
-              >
-                <MaterialSymbol name={visible ? "visibility_off" : "visibility"} className="text-[20px]" />
-              </button>
-            ) : null}
-          </div>
-          <FormMessage />
+          <FormControlInput>
+            <IconInput
+              {...field}
+              symbol="lock"
+              inset
+              invalid={!!fieldState.error}
+              type={visible ? "text" : "password"}
+              required={required}
+              minLength={minLength}
+              autoComplete={confirm ? "new-password" : "current-password"}
+              placeholder="Your password"
+              value={field.value ?? ""}
+              className={authInsetInputClass}
+              endAdornment={
+                showToggle ? (
+                  <button
+                    type="button"
+                    aria-label="Toggle password visibility"
+                    className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-surface-container-high hover:text-on-surface"
+                    onClick={() => setVisible((v) => !v)}
+                  >
+                    <MaterialSymbol name={visible ? "visibility_off" : "visibility"} className="text-[20px]" />
+                  </button>
+                ) : undefined
+              }
+            />
+          </FormControlInput>
+          <FormMessage className="flex items-center gap-1 text-[13px]" />
         </FormItem>
       )}
     />

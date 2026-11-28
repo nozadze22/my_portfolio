@@ -14,6 +14,7 @@ const SIDEBAR_NAV = [
   { to: "/admin/dashboard/education", label: "Education", icon: "school" },
   { to: "/admin/dashboard/experience", label: "Experience", icon: "work_history" },
   { to: "/admin/dashboard/skills", label: "Skills", icon: "psychology" },
+  { to: "/admin/dashboard/messages", label: "Messages", icon: "mail" },
 ] as const;
 
 export function AdminConsoleLayout() {

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './_routes/index'
 import { Route as AboutRouteImport } from './_routes/about'
 import { Route as AccountRouteImport } from './_routes/account'
 import { Route as AdminRouteRouteImport } from './_routes/admin/route'
+import { Route as ContactRouteImport } from './_routes/contact'
 import { Route as LoginRouteImport } from './_routes/login'
 import { Route as RegisterRouteImport } from './_routes/register'
 import { Route as AdminIndexRouteImport } from './_routes/admin/index'
@@ -22,6 +23,7 @@ import { Route as AdminRegisterRouteImport } from './_routes/admin/register'
 import { Route as AdminDashboardIndexRouteImport } from './_routes/admin/dashboard/index'
 import { Route as AdminDashboardEducationRouteImport } from './_routes/admin/dashboard/education'
 import { Route as AdminDashboardExperienceRouteImport } from './_routes/admin/dashboard/experience'
+import { Route as AdminDashboardMessagesRouteImport } from './_routes/admin/dashboard/messages'
 import { Route as AdminDashboardProfileRouteImport } from './_routes/admin/dashboard/profile'
 import { Route as AdminDashboardProjectsRouteImport } from './_routes/admin/dashboard/projects'
 import { Route as AdminDashboardSkillsRouteImport } from './_routes/admin/dashboard/skills'
@@ -44,6 +46,11 @@ const AccountRoute = AccountRouteImport.update({
 const AdminRouteRoute = AdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -92,6 +99,11 @@ const AdminDashboardExperienceRoute =
     path: '/experience',
     getParentRoute: () => AdminDashboardRouteRoute,
   } as any)
+const AdminDashboardMessagesRoute = AdminDashboardMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AdminDashboardRouteRoute,
+} as any)
 const AdminDashboardProfileRoute = AdminDashboardProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -113,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
+  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/admin/dashboard': typeof AdminDashboardRouteRouteWithChildren
@@ -121,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/admin/dashboard/education': typeof AdminDashboardEducationRoute
   '/admin/dashboard/experience': typeof AdminDashboardExperienceRoute
+  '/admin/dashboard/messages': typeof AdminDashboardMessagesRoute
   '/admin/dashboard/profile': typeof AdminDashboardProfileRoute
   '/admin/dashboard/projects': typeof AdminDashboardProjectsRoute
   '/admin/dashboard/skills': typeof AdminDashboardSkillsRoute
@@ -130,6 +144,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
+  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/admin/login': typeof AdminLoginRoute
@@ -137,6 +152,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/dashboard/education': typeof AdminDashboardEducationRoute
   '/admin/dashboard/experience': typeof AdminDashboardExperienceRoute
+  '/admin/dashboard/messages': typeof AdminDashboardMessagesRoute
   '/admin/dashboard/profile': typeof AdminDashboardProfileRoute
   '/admin/dashboard/projects': typeof AdminDashboardProjectsRoute
   '/admin/dashboard/skills': typeof AdminDashboardSkillsRoute
@@ -148,6 +164,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
+  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/admin/dashboard': typeof AdminDashboardRouteRouteWithChildren
@@ -156,6 +173,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/dashboard/education': typeof AdminDashboardEducationRoute
   '/admin/dashboard/experience': typeof AdminDashboardExperienceRoute
+  '/admin/dashboard/messages': typeof AdminDashboardMessagesRoute
   '/admin/dashboard/profile': typeof AdminDashboardProfileRoute
   '/admin/dashboard/projects': typeof AdminDashboardProjectsRoute
   '/admin/dashboard/skills': typeof AdminDashboardSkillsRoute
@@ -168,6 +186,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/about'
     | '/account'
+    | '/contact'
     | '/login'
     | '/register'
     | '/admin/dashboard'
@@ -176,6 +195,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/dashboard/education'
     | '/admin/dashboard/experience'
+    | '/admin/dashboard/messages'
     | '/admin/dashboard/profile'
     | '/admin/dashboard/projects'
     | '/admin/dashboard/skills'
@@ -185,6 +205,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/account'
+    | '/contact'
     | '/login'
     | '/register'
     | '/admin/login'
@@ -192,6 +213,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/dashboard/education'
     | '/admin/dashboard/experience'
+    | '/admin/dashboard/messages'
     | '/admin/dashboard/profile'
     | '/admin/dashboard/projects'
     | '/admin/dashboard/skills'
@@ -202,6 +224,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/about'
     | '/account'
+    | '/contact'
     | '/login'
     | '/register'
     | '/admin/dashboard'
@@ -210,6 +233,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/dashboard/education'
     | '/admin/dashboard/experience'
+    | '/admin/dashboard/messages'
     | '/admin/dashboard/profile'
     | '/admin/dashboard/projects'
     | '/admin/dashboard/skills'
@@ -221,6 +245,7 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRoute
+  ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
 }
@@ -253,6 +278,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -318,6 +350,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardExperienceRouteImport
       parentRoute: typeof AdminDashboardRouteRoute
     }
+    '/admin/dashboard/messages': {
+      id: '/admin/dashboard/messages'
+      path: '/messages'
+      fullPath: '/admin/dashboard/messages'
+      preLoaderRoute: typeof AdminDashboardMessagesRouteImport
+      parentRoute: typeof AdminDashboardRouteRoute
+    }
     '/admin/dashboard/profile': {
       id: '/admin/dashboard/profile'
       path: '/profile'
@@ -345,6 +384,7 @@ declare module '@tanstack/react-router' {
 interface AdminDashboardRouteRouteChildren {
   AdminDashboardEducationRoute: typeof AdminDashboardEducationRoute
   AdminDashboardExperienceRoute: typeof AdminDashboardExperienceRoute
+  AdminDashboardMessagesRoute: typeof AdminDashboardMessagesRoute
   AdminDashboardProfileRoute: typeof AdminDashboardProfileRoute
   AdminDashboardProjectsRoute: typeof AdminDashboardProjectsRoute
   AdminDashboardSkillsRoute: typeof AdminDashboardSkillsRoute
@@ -354,6 +394,7 @@ interface AdminDashboardRouteRouteChildren {
 const AdminDashboardRouteRouteChildren: AdminDashboardRouteRouteChildren = {
   AdminDashboardEducationRoute: AdminDashboardEducationRoute,
   AdminDashboardExperienceRoute: AdminDashboardExperienceRoute,
+  AdminDashboardMessagesRoute: AdminDashboardMessagesRoute,
   AdminDashboardProfileRoute: AdminDashboardProfileRoute,
   AdminDashboardProjectsRoute: AdminDashboardProjectsRoute,
   AdminDashboardSkillsRoute: AdminDashboardSkillsRoute,
@@ -386,6 +427,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AccountRoute: AccountRoute,
+  ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
 }

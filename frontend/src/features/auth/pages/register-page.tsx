@@ -1,3 +1,7 @@
+/**
+ * Registration page — disabled in routing (`router/_routes/register.tsx` redirects to login).
+ * Keep this file for when signup is needed again.
+ */
 "use client";
 
 import { useState } from "react";

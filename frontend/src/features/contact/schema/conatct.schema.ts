@@ -21,6 +21,7 @@ export const contactMessageSchema = z.object({
   email: z.string(),
   phone: z.string().nullable(),
   message: z.string(),
+  isRead: z.boolean().optional().default(false),
   createdAt: z.coerce.date(),
 });
 
