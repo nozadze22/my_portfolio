@@ -30,4 +30,4 @@ primary_region = 'fra'
   cpus = 1
 
 [deploy]
-  release_command = 'npx prisma migrate deploy'
+  release_command = 'pnpm exec prisma migrate deploy'
