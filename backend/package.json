@@ -25,7 +25,8 @@
     "prisma:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "migrate:media": "node scripts/migrate-media-urls.mjs"
   },
   "prisma": {
     "seed": "node prisma/seed.mjs"

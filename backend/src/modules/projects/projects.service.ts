@@ -11,6 +11,7 @@ import { PrismaService } from "../../prisma/prisma.service.js";
 import { ProjectListDto } from "./dto/projects.dto.js";
 import { CreateProjectDto } from "./dto/create.dto.js";
 import { UpdateProjectDto } from "./dto/update.js";
+import { normalizeMediaUrl } from "../../common/normalize-media-url.js";
 
 const skillInclude = {
   where: { published: true },
@@ -134,9 +135,12 @@ export class ProjectsService {
         );
       }
   
-      const galleryUrls = projectData.galleryUrls ?? [];
+      const galleryUrls = (projectData.galleryUrls ?? [])
+        .map((u) => normalizeMediaUrl(u))
+        .filter((u): u is string => Boolean(u));
       const imageUrl =
-        projectData.imageUrl ?? (galleryUrls.length > 0 ? galleryUrls[0] : undefined);
+        normalizeMediaUrl(projectData.imageUrl) ??
+        (galleryUrls.length > 0 ? galleryUrls[0] : undefined);
 
       return this.prisma.project.create({
         data: {
@@ -194,10 +198,29 @@ export class ProjectsService {
        await assertSkillsExist(this.prisma, skillIds);
      }
 
+     let galleryUrls = projectData.galleryUrls;
+     if (galleryUrls !== undefined) {
+       galleryUrls = galleryUrls
+         .map((u) => normalizeMediaUrl(u))
+         .filter((u): u is string => Boolean(u));
+     }
+
+     let imageUrl =
+       projectData.imageUrl !== undefined
+         ? normalizeMediaUrl(projectData.imageUrl)
+         : undefined;
+     if (galleryUrls !== undefined) {
+       imageUrl = imageUrl ?? galleryUrls[0] ?? null;
+     }
+
      return this.prisma.project.update({
       where: { id },
       data: {
         ...projectData,
+        ...(galleryUrls !== undefined ? { galleryUrls, imageUrl } : {}),
+        ...(projectData.imageUrl !== undefined && galleryUrls === undefined
+          ? { imageUrl }
+          : {}),
         slug,
         ...(skillIds !== undefined && {
           skills: {

@@ -57,6 +57,12 @@ export function ProjectCreateForm() {
       let galleryUrls: string[] | undefined;
       if (imageFiles.length > 0) {
         const uploaded = await uploadProjectImages(imageFiles);
+        if (uploaded.storage === "local") {
+          setError(
+            "Images saved on server disk only. Configure R2 in backend .env (including R2_PUBLIC_BASE_URL), restart the API, and try again.",
+          );
+          return;
+        }
         galleryUrls = uploaded.urls;
       }
       const slug = values.slug.trim().toLowerCase().replace(/\s+/g, "-");
