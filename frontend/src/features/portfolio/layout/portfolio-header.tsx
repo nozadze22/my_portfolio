@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import Wrapper from "@/components/shared/wrapper";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
@@ -17,6 +17,7 @@ const sectionLinks = [
 ] as const;
 
 export function PortfolioHeader() {
+  const router = useRouter();
   const { data: profile, isLoading } = useOwnerProfile();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -39,14 +40,23 @@ export function PortfolioHeader() {
   }, [pathname]);
 
   useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+    return router.subscribe("onResolved", () => {
+      setMobileOpen(false);
+    });
+  }, [router]);
+
+  const closeMobileMenu = () => setMobileOpen(false);
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-surface-variant/50 bg-surface-container-lowest/85 shadow-[0_4px_24px_rgba(15,23,42,0.04)] backdrop-blur-xl">
       <Wrapper className="flex h-[4.25rem] items-center justify-between gap-3 sm:h-[4.5rem] sm:gap-4">
         <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
-          <Link to="/" hash="home" className="group flex min-w-0 items-center gap-2.5 sm:gap-3">
+          <Link
+            to="/"
+            hash="home"
+            onClick={closeMobileMenu}
+            className="group flex min-w-0 items-center gap-2.5 sm:gap-3"
+          >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-surface-variant/80 bg-gradient-to-br from-surface-container-low to-surface-container-high shadow-sm transition group-hover:border-primary/50">
               <span className="font-label-badge text-label-badge text-primary">{label}</span>
             </div>
@@ -139,6 +149,7 @@ export function PortfolioHeader() {
                 key={item.hash}
                 to="/"
                 hash={item.hash}
+                onClick={closeMobileMenu}
                 className="rounded-xl px-4 py-3 text-sm font-medium text-on-surface hover:bg-surface-container-low"
               >
                 {item.label}
@@ -146,6 +157,7 @@ export function PortfolioHeader() {
             ))}
             <Link
               to="/contact"
+              onClick={closeMobileMenu}
               className={cn(
                 "rounded-xl px-4 py-3 text-sm font-medium",
                 onContactPage ? "bg-primary-container/15 text-primary" : "text-on-surface hover:bg-surface-container-low",
@@ -155,6 +167,7 @@ export function PortfolioHeader() {
             </Link>
             <Link
               to="/contact"
+              onClick={closeMobileMenu}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container py-3 text-sm font-semibold text-on-primary"
             >
               <MaterialSymbol name="chat_bubble" className="text-[18px]" />

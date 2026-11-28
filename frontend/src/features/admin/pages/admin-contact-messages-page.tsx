@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { AdminMetricCard } from "@/features/admin/components/admin-metric-card";
 import { AdminPageChrome } from "@/features/admin/layout/admin-console-layout";
@@ -27,19 +27,14 @@ export function AdminContactMessagesPage() {
   const total = meta?.total ?? 0;
   const unread = meta?.unread ?? items.filter((m) => !m.isRead).length;
 
-  const selected = items.find((m) => m.id === selectedId) ?? items[0] ?? null;
-
-  const itemIdsKey = useMemo(() => items.map((m) => m.id).join(","), [items]);
-
-  useEffect(() => {
-    if (items.length === 0) {
-      setSelectedId(null);
-      return;
+  const selected = useMemo(() => {
+    if (items.length === 0) return null;
+    if (selectedId) {
+      const current = items.find((m) => m.id === selectedId);
+      if (current) return current;
     }
-    setSelectedId((current) =>
-      current && items.some((m) => m.id === current) ? current : items[0]!.id,
-    );
-  }, [itemIdsKey, items]);
+    return items[0] ?? null;
+  }, [items, selectedId]);
 
   function handleMarkRead() {
     if (!selected) return;
