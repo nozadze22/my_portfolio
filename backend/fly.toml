@@ -10,6 +10,7 @@ primary_region = 'fra'
 [env]
   PORT = '8080'
   NODE_ENV = 'production'
+  PUBLIC_API_URL = 'https://giorgi-portfolio-api.fly.dev'
 
 [http_service]
   internal_port = 8080

@@ -13,7 +13,10 @@ import type { Project } from "@/features/projects/schema/project_schema";
 const EMPTY_PROJECTS: Project[] = [];
 
 export function AdminProjectsPage() {
-  const { data, isLoading, isError } = useGetProjects({ limit: 50, page: 1 });
+  const { data, isLoading, isError, error, refetch, isFetching } = useGetProjects({
+    limit: 50,
+    page: 1,
+  });
   const removeProject = useDeleteProjectEntry();
   const updateEntry = useUpdateProjectEntry();
   const projects = data?.data ?? EMPTY_PROJECTS;
@@ -83,7 +86,23 @@ export function AdminProjectsPage() {
         {isLoading ? (
           <p className="p-space-md text-sm text-on-surface-variant">Loading projects…</p>
         ) : isError ? (
-          <p className="p-space-md text-sm text-destructive">Could not load projects.</p>
+          <div className="space-y-2 p-space-md">
+            <p className="text-sm font-medium text-destructive">Could not load projects.</p>
+            <p className="text-xs text-on-surface-variant">
+              {error instanceof Error ? error.message : "Request failed"} — check{" "}
+              <code className="rounded bg-surface-container-low px-1">NEXT_PUBLIC_API_URL</code> on Vercel and{" "}
+              <code className="rounded bg-surface-container-low px-1">CORS_ORIGIN</code> on Fly (your site URL, no
+              trailing slash).
+            </p>
+            <button
+              type="button"
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="cursor-pointer text-sm font-semibold text-primary hover:underline disabled:opacity-50"
+            >
+              Try again
+            </button>
+          </div>
         ) : (
           <CardList>
             {filtered.map((project, index) => (

@@ -44,6 +44,8 @@ Workflow-ებისთვის GitHub **ვაწვდის ავტომ
 3. **Production Branch:** `main`
 4. Environment: `NEXT_PUBLIC_API_URL` = `https://giorgi-portfolio-api.fly.dev`
 
+5. **Fly.io** must have the same **R2** keys as local `backend/.env` and `CORS_ORIGIN` = your Vercel production URL (e.g. `https://my-portfolio-….vercel.app`). See `backend/FLY.md`.
+
 `main`-ზე push → Vercel თვითონ build + deploy (როგორც ახლა `my-portfolio-ten-livid-38.vercel.app`).
 
 `VERCEL_TOKEN` სჭირდება მხოლოდ თუ deploy-ს **მხოლოდ** Actions-იდან გინდა (არა Git integration).

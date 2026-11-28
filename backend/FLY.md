@@ -56,7 +56,29 @@ Release step runs `sh prisma/fly-migrate-deploy.sh` → `prisma migrate deploy` 
 
 ## Frontend
 
-Set `NEXT_PUBLIC_API_URL=https://portfolio.fly.dev` in the Next.js `.env.production` or hosting env.
+Set `NEXT_PUBLIC_API_URL=https://giorgi-portfolio-api.fly.dev` in Vercel → Project → Settings → Environment Variables (Production).
+
+`CORS_ORIGIN` on Fly must match your Vercel site exactly, e.g. `https://my-portfolio-ten-livid-30.vercel.app` (comma-separated if you have several).
+
+Without R2 secrets, uploads fall back to **ephemeral local disk** on Fly (images disappear) and URLs break on the public site — always set all `R2_*` variables in production.
+
+## Fly secrets one-shot (PowerShell)
+
+```powershell
+cd backend
+fly secrets set `
+  DATABASE_URL="postgresql://..." `
+  JWT_SECRET="..." `
+  CORS_ORIGIN="https://YOUR-VERCEL-APP.vercel.app" `
+  R2_ACCOUNT_ID="..." `
+  R2_ACCESS_KEY_ID="..." `
+  R2_ACCESS_KEY_SECRET="..." `
+  R2_BUCKET="portfolio" `
+  R2_PUBLIC_BASE_URL="https://pub-xxxx.r2.dev" `
+  JWT_EXPIRES_MS="900000" `
+  JWT_REFRESH_EXPIRES_MS="2592000000" `
+  -a giorgi-portfolio-api
+```
 
 ## Uploads folder
 
