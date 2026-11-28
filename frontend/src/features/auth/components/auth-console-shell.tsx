@@ -9,11 +9,17 @@ export function AuthConsoleShell({
   wide?: boolean;
 }) {
   return (
-    <main className="flex min-h-screen w-full items-center justify-center bg-surface p-gutter font-body-md text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
-      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden py-space-xl">
-        <div className="pointer-events-none absolute -top-24 left-1/2 h-[680px] w-[680px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-primary/10 via-secondary-container/10 to-transparent blur-3xl" />
+    <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-surface p-gutter font-body-md text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,color-mix(in_srgb,var(--color-primary)_14%,transparent),transparent)]"
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute -left-32 top-1/4 h-72 w-72 rounded-full bg-secondary-container/25 blur-3xl" aria-hidden />
+      <div className="pointer-events-none absolute -right-24 bottom-1/4 h-80 w-80 rounded-full bg-primary/10 blur-3xl" aria-hidden />
+
+      <div className="relative z-10 flex w-full flex-col items-center justify-center py-space-xl">
         <div
-          className={`relative z-10 flex w-full flex-col gap-space-lg ${wide ? "max-w-2xl" : "max-w-[520px]"}`}
+          className={`flex w-full flex-col gap-space-lg ${wide ? "max-w-2xl" : "max-w-[480px]"}`}
         >
           <AuthConsoleStatusBar />
           {children}
@@ -26,14 +32,14 @@ export function AuthConsoleShell({
 
 function AuthConsoleStatusBar() {
   return (
-    <div className="flex items-center justify-between px-space-xs">
-      <div className="inline-flex items-center gap-2 rounded-full bg-surface-container-high px-3 py-1 font-label-badge text-label-badge text-on-surface-variant shadow-sm">
-        <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-        <span className="tracking-wide">PORTFOLIO CONSOLE</span>
+    <div className="flex items-center justify-between gap-3 px-space-xs">
+      <div className="inline-flex items-center gap-2 rounded-full border border-outline-variant/35 bg-surface-container-lowest/90 px-3 py-1.5 font-label-badge text-label-badge text-on-surface-variant shadow-sm backdrop-blur-sm">
+        <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+        <span className="tracking-wide">Portfolio console</span>
       </div>
-      <div className="flex items-center gap-1 font-label-code text-label-code text-outline">
-        <MaterialSymbol name="lock" className="text-[16px]" />
-        <span className="hidden sm:inline">Access + refresh cookies</span>
+      <div className="hidden items-center gap-1.5 rounded-full border border-transparent px-2 py-1 font-label-code text-[11px] text-outline sm:flex">
+        <MaterialSymbol name="encrypted" className="text-[16px] text-secondary" />
+        <span>Secure session</span>
       </div>
     </div>
   );
@@ -41,26 +47,22 @@ function AuthConsoleStatusBar() {
 
 function AuthConsoleTrustFooter() {
   return (
-    <div className="flex flex-col items-center justify-between gap-3 px-space-xs font-label-code text-[11px] text-outline sm:flex-row">
-      <div className="flex items-center gap-2">
-        <MaterialSymbol name="verified_user" className="text-[16px] text-secondary" />
-        <span>HTTPS recommended in production</span>
-      </div>
-      <div className="hidden text-outline-variant sm:block">•</div>
-      <div className="flex items-center gap-2">
-        <MaterialSymbol name="security" className="text-[16px] text-secondary" />
-        <span>HttpOnly · rotating refresh</span>
-      </div>
-    </div>
+    <p className="text-center font-label-code text-[11px] leading-relaxed text-outline">
+      Cookie-based auth · refresh token rotation · use HTTPS in production
+    </p>
   );
 }
 
 export function AuthCard({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <div
-      className={`relative flex w-full flex-col rounded-xl bg-surface-container-lowest p-8 shadow-xl transition-all duration-300 sm:p-10 ${className}`}
+      className={`relative w-full overflow-hidden rounded-2xl border border-outline-variant/25 bg-surface-container-lowest/95 p-8 shadow-[0_24px_80px_-24px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-10 ${className}`}
     >
-      {children}
+      <div
+        className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/8 blur-2xl"
+        aria-hidden
+      />
+      <div className="relative">{children}</div>
     </div>
   );
 }

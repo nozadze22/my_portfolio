@@ -52,7 +52,7 @@ export function PortfolioFooter() {
         </div>
         <p className="mt-space-lg text-center text-xs text-outline">
           Personal portfolio — single owner mode.{" "}
-          <Link to="/login" search={{ next: undefined }} className="text-primary hover:underline">
+          <Link to="/login" search={{ next: undefined }} className="cursor-pointer text-primary hover:underline">
             Sign in
           </Link>
         </p>

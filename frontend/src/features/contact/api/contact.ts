@@ -2,6 +2,7 @@ import {
   type ContactMessage,
   type SendContactInput,
 } from "../schema/conatct.schema";
+import { contactListResponseSchema } from "../schema/contact-list.schema";
 import { api } from "@/lib/api";
 
 export type ContactListQuery = {
@@ -13,6 +14,7 @@ export type ContactListResponse = {
   data: ContactMessage[];
   meta: {
     total: number;
+    unread: number;
     page: number;
     limit: number;
     totalPages: number;
@@ -33,5 +35,12 @@ export async function getContactList(query: ContactListQuery = {}) {
   params.set("page", String(query.page ?? 1));
   params.set("limit", String(query.limit ?? 10));
 
-  return api<ContactListResponse>(`/contact/list?${params.toString()}`);
+  const raw = await api<unknown>(`/contact/list?${params.toString()}`);
+  return contactListResponseSchema.parse(raw);
+}
+
+export async function markContactRead(id: string) {
+  return api<ContactMessage>(`/contact/${id}/read`, {
+    method: "PATCH",
+  });
 }

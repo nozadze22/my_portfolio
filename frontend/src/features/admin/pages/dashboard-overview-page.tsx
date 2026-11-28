@@ -9,6 +9,7 @@ import { useExperiences } from "@/features/experience/hooks/experience";
 import { useGetProjects } from "@/features/projects/hooks/projects";
 import { useSkills } from "@/features/skills/hooks/skills";
 import { useAuthMe } from "@/features/auth/hooks/auth";
+import { useGetContactList } from "@/features/contact/hooks/conatct";
 
 export function DashboardOverviewPage() {
   const { data: user } = useAuthMe();
@@ -16,12 +17,14 @@ export function DashboardOverviewPage() {
   const education = useEducationList({ limit: 100 });
   const experience = useExperiences({ limit: 100 });
   const skills = useSkills({ limit: 100 });
+  const inbox = useGetContactList({ page: 1, limit: 1 });
 
   const projectList = projects.data?.data ?? [];
   const featured = projectList.filter((p) => p.featured).length;
   const eduTotal = education.data?.meta.total ?? 0;
   const expTotal = experience.data?.meta.total ?? 0;
   const skillTotal = skills.data?.meta.total ?? 0;
+  const unreadMessages = inbox.data?.meta.unread ?? 0;
 
   return (
     <AdminPageChrome
@@ -38,7 +41,7 @@ export function DashboardOverviewPage() {
         </Link>
       }
     >
-      <div className="grid grid-cols-1 gap-space-md sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-space-md sm:grid-cols-2 xl:grid-cols-6">
         <AdminMetricCard
           label="Total projects"
           value={String(projects.data?.meta.total ?? projectList.length)}
@@ -55,6 +58,13 @@ export function DashboardOverviewPage() {
         <AdminMetricCard label="Education" value={String(eduTotal)} hint="Credentials" icon="verified" />
         <AdminMetricCard label="Experience" value={String(expTotal)} hint="Roles" icon="work_history" />
         <AdminMetricCard label="Skills" value={String(skillTotal)} hint="Technologies" icon="psychology" />
+        <AdminMetricCard
+          label="Unread mail"
+          value={String(unreadMessages)}
+          hint="Contact form"
+          icon="mark_email_unread"
+          fillIcon
+        />
       </div>
 
       <div className="grid gap-space-md sm:grid-cols-2 lg:grid-cols-3">
@@ -108,5 +118,11 @@ const QUICK_LINKS = [
     title: "Skills",
     desc: "Languages, tools, and stacks",
     icon: "psychology",
+  },
+  {
+    to: "/admin/dashboard/messages" as const,
+    title: "Messages",
+    desc: "Inbox from the contact page",
+    icon: "mail",
   },
 ];

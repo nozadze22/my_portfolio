@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
+import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Route as LoginRoute } from "@/router/_routes/login";
 import { AuthCard, AuthConsoleShell } from "@/features/auth/components/auth-console-shell";
 import {
@@ -49,27 +50,29 @@ export function LoginPage() {
     <AuthConsoleShell>
       <AuthCard>
         <AuthBrandBlock
-          title={isAdminFlow ? "Admin authentication" : "Sign in"}
-          subtitle="Use your portfolio account. Admins manage projects and profile; users get a personal account only."
+          title={isAdminFlow ? "Admin sign in" : "Welcome back"}
+          subtitle={
+            isAdminFlow
+              ? "Access the dashboard to edit projects, profile, skills, and contact messages."
+              : "Use the email and password for your portfolio account."
+          }
         />
         <AuthSsoPlaceholderRow />
         <AuthOrDivider label="Or continue with email" />
         <Form {...form}>
-          <form className="mt-4 space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
-            <AuthFormEmailField control={form.control} name="email" />
+          <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+            <AuthFormEmailField control={form.control} name="email" placeholder="you@example.com" />
             <AuthFormPasswordField control={form.control} name="password" label="Password" />
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            {error ? (
+              <p className="flex items-start gap-2 rounded-xl border border-destructive/25 bg-destructive/5 px-3 py-2.5 text-sm text-destructive">
+                <MaterialSymbol name="error" className="mt-0.5 shrink-0 text-[18px]" />
+                <span>{error}</span>
+              </p>
+            ) : null}
             <AuthSubmitButton pending={pending} label="Sign in" pendingLabel="Signing in…" />
           </form>
         </Form>
-        <div className="mt-6 flex justify-center border-t border-surface-container pt-5 text-center">
-          <p className="font-body-sm text-body-sm text-on-surface-variant">
-            New account?{" "}
-            <Link to="/register" className="ml-1 font-semibold text-primary underline-offset-4 hover:underline">
-              Register
-            </Link>
-          </p>
-        </div>
+        {/* Registration disabled until needed — see router/_routes/register.tsx */}
       </AuthCard>
     </AuthConsoleShell>
   );

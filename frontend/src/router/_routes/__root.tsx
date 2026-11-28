@@ -2,10 +2,12 @@ import { createRootRoute, Outlet, useRouterState } from "@tanstack/react-router"
 
 import { AppSurface, SiteShell } from "@/components/layout/site-shell";
 import { RouteErrorFallback } from "@/components/layout/route-error-fallback";
+import { RouteNotFound } from "@/components/layout/route-not-found";
 
 export const Route = createRootRoute({
   component: RootLayout,
   errorComponent: RouteErrorFallback,
+  notFoundComponent: RouteNotFound,
 });
 
 function RootLayout() {

@@ -1,5 +1,5 @@
 import { AboutSection } from "./sections/about-section";
-import { ContactSection } from "./sections/contact-section";
+import { ContactCtaSection } from "./sections/contact-cta-section";
 import { EducationSection } from "./sections/education-section";
 import { ExperienceSection } from "./sections/experience-section";
 import { HomeSection } from "./sections/home-section";
@@ -15,7 +15,7 @@ export function PortfolioPage() {
       <ProjectsSection />
       <ExperienceSection />
       <EducationSection />
-      <ContactSection />
+      <ContactCtaSection />
     </div>
   );
 }
