@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service.js";
+import { normalizeMediaUrl } from "../../common/normalize-media-url.js";
 import { UpdateProfileDto } from "./dto/update-profile.dto.js";
 
 const OWNER_ID = "owner";
@@ -51,9 +52,15 @@ export class ProfileService {
   async update(data: UpdateProfileDto) {
     await this.get();
 
+    const avatarUrl =
+      data.avatarUrl !== undefined ? normalizeMediaUrl(data.avatarUrl) : undefined;
+
     return this.prisma.siteProfile.update({
       where: { id: OWNER_ID },
-      data,
+      data: {
+        ...data,
+        ...(data.avatarUrl !== undefined ? { avatarUrl } : {}),
+      },
     });
   }
 }

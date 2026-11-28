@@ -104,8 +104,14 @@ export function ProjectEditDialog({
       let imageUrl: string | undefined;
       if (imageFiles.length > 0) {
         const uploaded = await uploadProjectImages(imageFiles);
-        galleryUrls = uploaded.urls;
-        imageUrl = uploaded.urls[0];
+        if (uploaded.storage === "local") {
+          setError(
+            "Images saved on server disk only. Set R2_PUBLIC_BASE_URL and R2 keys in backend .env, restart API, then upload again.",
+          );
+          return;
+        }
+        galleryUrls = [...existingGallery, ...uploaded.urls].slice(0, 12);
+        imageUrl = galleryUrls[0];
       }
       const slug = values.slug.trim().toLowerCase().replace(/\s+/g, "-");
       await updateProject.mutateAsync({

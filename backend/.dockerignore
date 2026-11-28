@@ -1,0 +1,16 @@
+node_modules
+dist
+uploads
+.env
+.env.*
+!.env.example
+.git
+.agents
+.claude
+.cursor
+.devin
+coverage
+test
+*.md
+!README.md
+.vscode
